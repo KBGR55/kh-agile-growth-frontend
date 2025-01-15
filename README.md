@@ -1,70 +1,142 @@
-# Getting Started with Create React App
+# KH Agile Growth
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <img src="public/logo192.png" width="350px" alt="Logo" style="display: inline-block;">
+</div>
 
-## Available Scripts
+## Sistema para Determinar el Modelo de Madurez de un Software
 
-In the project directory, you can run:
+### Título del Proyecto
+**Desarrollo de un Sistema para la Evaluación y Mejora del Modelo de Madurez de Software**
 
-### `npm start`
+### Objetivo General
+Desarrollar un sistema integral que facilite la evaluación del nivel de madurez de software mediante la asignación y seguimiento de medidas correctivas, optimizando procesos de mejora continua y generando reportes para la toma de decisiones.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Alcance del Proyecto
+El sistema está diseñado para organizaciones que buscan evaluar y mejorar el nivel de madurez de su software. El alcance incluye:
 
-### `npm test`
+- **Gestión de usuarios y roles específicos:** administrador del sistema, líderes de proyecto y miembros del equipo.
+- **Formularios de evaluación de madurez:** recopilar información y analizar áreas de mejora.
+- **Generación automática de medidas correctivas:** basadas en las respuestas del formulario.
+- **Seguimiento del estado de medidas correctivas:** (NO_APLICABLE, APLICADA, ACEPTADA, ABIERTA).
+- **Dashboard interactivo:** monitoreo del progreso.
+- **Reportes descargables:** en formato Excel.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Características del Sistema
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Roles y Gestión de Usuarios
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Administrador del Sistema
+- Aceptar o rechazar solicitudes de nuevos usuarios.
+- Editar datos de usuarios existentes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Líder del Proyecto
+- Crear nuevos proyectos.
+- Agregar miembros al proyecto.
 
-### `npm run eject`
+#### Miembro del Equipo
+- Registrarse en el sistema.
+- Consultar actividades correctivas asignadas.
+- Visualizar el dashboard.
+- Marcar actividades como "Aplicada".
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Evaluación de Madurez
+- Formulario dinámico con lista seleccionable de métricas para evaluar el nivel de madurez.
+- Categorización automática de medidas correctivas:
+  - **NO_APLICABLE:** La medida no es relevante.
+  - **APLICADA:** La medida ha sido implementada.
+  - **ACEPTADA:** La medida ha sido asignada a un responsable.
+  - **ABIERTA:** La medida está pendiente de aceptación.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Gestión de Medidas Correctivas
+- Lista de medidas correctivas organizadas por estado.
+- Opciones para asignar medidas a miembros del equipo.
+- Actualización del estado de medidas según su progreso.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Dashboard
+- Visualización gráfica de:
+  - Niveles de madurez actuales.
+  - Progreso de las medidas correctivas.
+  - Indicadores clave derivados de la evaluación.
+- Panel interactivo con filtros personalizables por proyecto o métrica.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Generación de Reportes
+- Exportación de reportes en formato Excel:
+  - Resumen de evaluaciones realizadas.
+  - Detalle del estado de medidas correctivas.
+  - Análisis comparativo de progreso en el tiempo.
 
-## Learn More
+### Notificaciones por Correo Electrónico
+- Enviar automáticamente notificaciones a los usuarios sobre:
+  - Nuevas medidas correctivas asignadas.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Indicadores de Impacto
+- Medir el impacto real de las medidas implementadas sobre el modelo de madurez.
+- Mostrar resultados cuantitativos.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Beneficios Esperados
+- Simplificación del proceso de evaluación y seguimiento del modelo de madurez de software.
+- Mayor claridad en la asignación y progreso de medidas correctivas.
+- Herramientas accesibles para la toma de decisiones basada en datos.
+- Reducción de tiempo y esfuerzo en la gestión manual de evaluaciones.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Instrucciones de Instalación y Ejecución
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/KBGR55/kh-agile-growth-frontend.git
+   ```
+2. Navegar al directorio del proyecto:
+   ```bash
+   cd kh-agile-growth-frontend
+   ```
+3. Instalar las dependencias:
+   ```bash
+   npm install
+   ```
+4. Iniciar el servidor de desarrollo:
+   ```bash
+   npm start
+   ```
+5. Acceder a la aplicación en tu navegador:
+   [http://localhost:3000](http://localhost:3000)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## Contribución
+Si deseas contribuir al proyecto, por favor sigue los pasos:
+1. Haz un fork del repositorio.
+2. Crea una nueva rama para tus cambios:
+   ```bash
+   git checkout -b feature/nueva-funcionalidad
+   ```
+3. Realiza tus cambios y realiza un commit:
+   ```bash
+   git commit -m "Descripción de los cambios"
+   ```
+4. Sube tus cambios a tu rama:
+   ```bash
+   git push origin feature/nueva-funcionalidad
+   ```
+5. Abre un Pull Request en el repositorio original.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## Desarrolladores
+- **Karen Gonzaga** - [GitHub](https://github.com/KBGR55)
+- **Hilary Clava** - [GitHub](https://github.com/Hilary-Madelein)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Instructor
+- **Ing. Cristian Narvaez** - [GitHub](https://github.com/codernarvaez)
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Contacto
+Para preguntas o soporte técnico, por favor contactar a: **[soporte@example.com](mailto:soporte@example.com)**
