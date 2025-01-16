@@ -71,7 +71,7 @@ const NavLink = () => {
 
     const handleCerrarSesion = () => {
         borrarSesion();
-        navigate('/');
+        navigate('/login');
     };
 
     const toggleDropdown = () => {

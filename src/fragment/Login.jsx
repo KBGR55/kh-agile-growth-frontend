@@ -39,7 +39,7 @@ const Login = () => {
                 saveToken(infoAux.token);
                 saveUser(infoAux.user);
                 saveCorreo(infoAux.correo);
-                navegation("/proyectos");
+                navegation("/main");
                 mensajes(info.msg);
             }
         });
