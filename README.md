@@ -131,7 +131,7 @@ Si deseas contribuir al proyecto, por favor sigue los pasos:
 
 ## Desarrolladores
 - **Karen Gonzaga** - [GitHub](https://github.com/KBGR55)
-- **Hilary Clava** - [GitHub](https://github.com/Hilary-Madelein)
+- **Hilary Calva** - [GitHub](https://github.com/Hilary-Madelein)
 
 ## Instructor
 - **Ing. Cristian Narvaez** - [GitHub](https://github.com/codernarvaez)
