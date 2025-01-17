@@ -1,9 +1,9 @@
 :root {
     --color-primario: #F6F4F0;
     --color-secundario: #79D7BE;
-    --color-terciario: #A6B1E1;
-    --color-cuarto: #4DA1A9;
-    --azul-oscuro: #2E5077;
+    --color-terciario: #4DA1A9;
+    --color-cuarto: #2E5077;
+    --azul-oscuro: #0b294d;
     --azul-intermedio: #0d4f81;
     --azul-opcional: #608BC1;
     --azul-opcional-transparente: #CBDCEB;
@@ -73,8 +73,66 @@
   
   .contenedor-carta {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
-    background-color: transparent; border-radius: 10px; padding: 25px; width: 100%;
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 25px;
+    width: 100%;
   }
+  
+  .role-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .role-options-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .role-option-item {
+    margin: 0.5rem 0;
+  }
+  
+  .option-button {
+    background-color: var(--color-cuarto);
+    color: #fff;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .option-button:hover {
+    background-color: var(--color-terciario);
+  }
+  .contenedor-carta {
+    padding: 20px;
+}
+
+.fila-opciones {
+    display: flex;
+    gap: 20px; /* Espacio entre los elementos */
+    align-items: flex-start; /* Alineación vertical superior */
+}
+
+.g-1,
+.project-team {
+
+    flex: 1; 
+}
+
+.project-team {
+    max-width: 900px; 
+}
+@media (max-width: 768px) {
+    .fila-opciones {
+        flex-direction: column;
+    }
+}
+
   
   .contenedor-filo {
     display: flex; 
@@ -524,4 +582,161 @@
         width: 100%; 
         height: auto; 
     }
+}
+
+.imagen-pequena {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .margen-usuarios-pequenos {
+    margin: 0 10px;
+  }
+  
+  .boton-eliminar-pequeno {
+    padding: 2px 5px;
+    font-size: 0.8rem;
+  }
+  
+  .user-container {
+    display: flex;
+    align-items: center;
+    /* Para alinear verticalmente la imagen y el texto */
+  }
+  
+  .main-container {
+    background-color: #f4f4f9;
+    padding: 20px;
+  }  
+
+.peticiones-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .peticion-card-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .peticion-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  
+  .peticion-card.abierto {
+    transform: translateY(-5px);
+  }
+  
+  .peticion-card-header {
+    margin-bottom: 15px;
+  }
+  
+  .peticion-titulo {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .peticion-correo,
+  .peticion-fecha {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .peticion-details {
+    margin-top: 15px;
+  }
+  
+  .peticion-mensaje {
+    font-size: 1rem;
+    color: #444;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+/*PRESENTACION PROYECTO*/
+.project-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.header-section {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(70%);
+}
+
+.header-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.project-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.project-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.content-section {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    width: 80%;
+    max-width: 1200px;
+    gap: 2rem;
+}
+
+.project-team {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.project-description p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.project-team ul {
+    list-style-type: none;
+}
+
+.project-team li {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.5rem;
 }

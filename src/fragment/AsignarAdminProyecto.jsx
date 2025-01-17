@@ -8,8 +8,9 @@ import mensajes from '../utilities/Mensajes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCheck, faTrash } from '@fortawesome/free-solid-svg-icons';
 import swal from 'sweetalert';
+import '../css/style.css';
 
-const AsignarLideres = () => {
+const AsignarAdminProyecto = () => {
     const { external_id } = useParams();
     const [searchTerm, setSearchTerm] = useState('');
     const [users, setUsers] = useState([]);
@@ -51,7 +52,7 @@ const AsignarLideres = () => {
         }
     };
 
-    const handleAsignarLideres = async () => {
+    const handleAsignarAdminProyecto = async () => {
         const body = {
             lideres: users.map(l => ({ id_entidad: l.id }))
         };
@@ -73,7 +74,7 @@ const AsignarLideres = () => {
 
     const handleCancelClick = () => {
         swal({
-            title: "¿Está seguro de cancelar la asignación de lideres?",
+            title: "¿Está seguro de cancelar la asignación del administrador de proyectos?",
             text: "Una vez cancelado, no podrá revertir esta acción",
             icon: "warning",
             buttons: ["No", "Sí"],
@@ -139,7 +140,7 @@ const AsignarLideres = () => {
                         <Button variant="secondary" className="btn-negativo" onClick={handleCancelClick}>
                             <FontAwesomeIcon icon={faTimes} /> Cancelar
                         </Button>
-                        <Button className="btn-positivo" onClick={handleAsignarLideres}>
+                        <Button className="btn-positivo" onClick={handleAsignarAdminProyecto}>
                             <FontAwesomeIcon icon={faCheck} /> Aceptar
                         </Button>
 
@@ -150,4 +151,4 @@ const AsignarLideres = () => {
     );
 };
 
-export default AsignarLideres;
+export default AsignarAdminProyecto;

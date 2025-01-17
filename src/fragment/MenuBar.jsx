@@ -80,7 +80,7 @@ const NavLink = () => {
 
     return (
         <Nav className='text-white'>
-            <Nav.Link href="/main" style={navLinkStyle}><i className="fas fa-home"></i> Inicio</Nav.Link>
+            <Nav.Link href="/proyectos" style={navLinkStyle}><i className="fas fa-home"></i> Inicio</Nav.Link>
             <Nav.Link href="/usuarios" style={navLinkStyle}><i className="fas fa-book"></i> Gestionar Usuarios</Nav.Link>
             <Nav.Link href='/proyectos' style={navLinkStyle}>Proyectos</Nav.Link>
             {token && (
