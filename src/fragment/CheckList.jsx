@@ -1,135 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../css/style.css";
 import MenuBar from "./MenuBar";
+import { useNavigate } from "react-router-dom";
+import { borrarSesion, getToken } from "../utilities/Sessionutil";
+import { peticionGet, peticionPost } from "../utilities/hooks/Conexion";
+import swal from 'sweetalert';
 
 const CheckList = () => {
     const project = "Proyecto X";
+    const projectExternalId = "0caf1c30-9337-4e53-9fe7-7698d1522019";
 
-    const [selectedCounts, setSelectedCounts] = useState(
-        Array(10).fill(0)
-    );
+    const [data, setData] = useState([]);
+    const [selectedCounts, setSelectedCounts] = useState([]);
+    const [selectedResponses, setSelectedResponses] = useState({});
+    const navigate = useNavigate();
 
-    const sections = [
-        {
-            title: "Cobertura del Ciclo de Vida",
-            color: 'var(--azul-oscuro)',
-            items: [
-                "¿Se definen objetivos claros en la etapa de planificación?",
-                "¿Se documenta el análisis de requisitos?",
-                "¿Se elabora un diseño técnico detallado?",
-                "¿Se realizan revisiones técnicas durante cada fase del ciclo de vida?",
-                "¿Se ejecutan pruebas de integración para asegurar la interoperabilidad entre componentes?",
-                "¿Se realizan pruebas de aceptación por parte del cliente?",
-                "¿Se implementan protocolos de mantenimiento post-entrega?",
-            ],
-        },
-        {
-            title: "Trazabilidad",
-            color: 'var(--azul-intermedio)',
-            items: [
-                "¿Los requisitos cuentan con identificadores únicos?",
-                "¿Se mantienen actualizados los registros de cambios en los requisitos?",
-                "¿Existe una relación clara entre los casos de prueba y los requisitos?",
-                "¿Se rastrea cada defecto detectado hasta su causa raíz?",
-                "¿Se documentan las versiones del producto con los cambios asociados?",
-                "¿Se utilizan herramientas especializadas para la trazabilidad (ej., JIRA, Azure DevOps)?",
-            ],
-        },
-        {
-            title: "Cumplimiento de Requisitos",
-            color: '#2E79BA',
-            items: [
-                "¿Se establecen criterios claros de aceptación para cada requisito?",
-                "¿Se revisan los requisitos con los stakeholders antes de comenzar el desarrollo?",
-                "¿Se validan los requisitos funcionales a través de prototipos o pruebas iniciales?",
-                "¿Se verifican los requisitos no funcionales, como rendimiento y escalabilidad?",
-                "¿Se utilizan métricas para evaluar el grado de cumplimiento de los requisitos?",
-            ],
-        },
-        {
-            title: "Gestión de Riesgos",
-            color: '#3282B8',
-            items: [
-                "¿Se elabora un registro inicial de riesgos antes de iniciar el proyecto?",
-                "¿Se priorizan los riesgos en función de su probabilidad e impacto?",
-                "¿Se asignan responsables específicos para cada riesgo identificado?",
-                "¿Se implementan controles preventivos para mitigar riesgos críticos?",
-                "¿Se realiza un monitoreo continuo de los riesgos durante todo el proyecto?",
-                "¿Se documentan lecciones aprendidas para evitar riesgos similares en futuros proyectos?",
-            ],
-        },
-        {
-            title: "Calidad del Producto",
-            color: '#0A81AB',
-            items: [
-                "¿Se realizan revisiones de código antes de la integración?",
-                "¿Se implementan pruebas unitarias para cada módulo desarrollado?",
-                "¿Se ejecutan pruebas de estrés para evaluar la capacidad del software bajo alta carga?",
-                "¿Se mide la usabilidad del software a través de pruebas con usuarios finales?",
-                "¿Se analiza la eficiencia del código para reducir el consumo de recursos?",
-                "¿Se validan los resultados obtenidos frente a los estándares de calidad definidos (ISO/IEC 25010)?",
-            ],
-        },
-        {
-            title: "Seguridad",
-            color: '#4592AF',
-            items: [
-                "¿Se realiza un análisis de vulnerabilidades durante la etapa de desarrollo?",
-                "¿Se aplican prácticas seguras de codificación para prevenir inyecciones SQL, XSS, entre otros?",
-                "¿Se incluyen autenticación y autorización para controlar el acceso al sistema?",
-                "¿Se utiliza encriptación para datos sensibles en tránsito y en reposo?",
-                "¿Se ejecutan pruebas de penetración para identificar posibles brechas de seguridad?",
-                "¿El equipo recibe capacitación en seguridad informática?",
-            ],
-        },
-        {
-            title: "Tiempo de Respuesta",
-            color: '#83B4FF',
-            items: [
-                "¿Se define un tiempo máximo aceptable de respuesta para las principales funciones del software?",
-                "¿Se realizan pruebas de rendimiento bajo diferentes escenarios de carga?",
-                "¿Se optimiza el uso de recursos como memoria y CPU para mejorar los tiempos de respuesta?",
-                "¿Se registran y analizan los tiempos de respuesta en el entorno de producción?",
-                "¿Se optimizan consultas a la base de datos para reducir los tiempos de ejecución?",
-            ],
-        },
-        {
-            title: "Adaptabilidad y Flexibilidad",
-            color: '#8DC6FF',
-            items: [
-                "¿Se pueden realizar modificaciones en el software sin afectar otros módulos?",
-                "¿El diseño del software permite la incorporación de nuevas funcionalidades fácilmente?",
-                "¿Se documentan las dependencias entre componentes para facilitar los cambios?",
-                "¿El software puede escalar horizontal o verticalmente para manejar más usuarios o datos?",
-                "¿Se realizan pruebas de regresión para asegurar que los cambios no introducen nuevos defectos?",
-                "¿Se utiliza una arquitectura basada en microservicios o modularidad para facilitar la adaptabilidad?",
-            ],
-        },
-        {
-            title: "Automatización",
-            color: '#41AAA8',
-            items: [
-                "¿Se automatizan las pruebas unitarias, de integración y de regresión?",
-                "¿Se implementa un pipeline de integración y despliegue continuo (CI/CD)?",
-                "¿Se automatizan procesos de generación de documentación?",
-                "¿Se utilizan scripts para configurar entornos de desarrollo, prueba y producción?",
-                "¿Se monitorizan automáticamente los sistemas en producción para detectar fallos o anomalías?",
-                "¿Se realizan auditorías automáticas de seguridad y calidad del código?",
-            ],
-        },
-        {
-            title: "Mejora Continua",
-            color: '#3DD2CC',
-            items: [
-                "¿El equipo realiza reuniones de retrospectiva al final de cada sprint o iteración?",
-                "¿Se implementan mejoras sugeridas por el equipo o clientes en ciclos posteriores?",
-                "¿Se utilizan indicadores clave de desempeño (KPIs) para evaluar el progreso del proyecto?",
-                "¿El equipo participa en capacitaciones regulares para mejorar sus habilidades?",
-                "¿Se adoptan nuevas herramientas o metodologías para mejorar la eficiencia y calidad?",
-                "¿Se registra un historial de todas las mejoras implementadas para futuros proyectos?",
-            ],
-        },
-    ];
+    const colors = {
+        "Cobertura del Ciclo de Vida": 'var(--azul-oscuro)',
+        "Trazabilidad": 'var(--azul-intermedio)',
+        "Cumplimiento de Requisitos": '#2E79BA',
+        "Gestión de Riesgos": '#3282B8',
+        "Calidad del Producto": '#0A81AB',
+        "Seguridad": '#4592AF',
+        "Tiempo de Respuesta": '#83B4FF',
+        "Adaptabilidad y Flexibilidad": '#8DC6FF',
+        "Automatización": '#41AAA8',
+        "Mejora Continua": '#3DD2CC',
+    };
+
+    useEffect(() => {
+        peticionGet(getToken(), '/preguntas/checklist')
+            .then((response) => {
+                if (response.code === 200) {
+                    const mappedData = response.info.map((section) => ({
+                        ...section,
+                        color: colors[section.titulo] || "#ccc",
+                    }));
+                    setData(mappedData);
+
+                    const initialResponses = {};
+                    mappedData.forEach((section) => {
+                        section.preguntas.forEach((pregunta) => {
+                            initialResponses[pregunta.id] = false;
+                        });
+                    });
+                    setSelectedResponses(initialResponses);
+                } else {
+                    console.error("Error al cargar datos:", response.msg);
+                }
+            })
+            .catch((error) => console.error("Error en la petición:", error));
+    }, []);
 
     const criteria = [
         {
@@ -190,12 +111,56 @@ const CheckList = () => {
     ];
 
     // Manejar el cambio en las selecciones
-    const handleSelectionChange = (sectionIndex, isChecked) => {
-        setSelectedCounts((prevCounts) => {
-            const newCounts = [...prevCounts];
-            newCounts[sectionIndex] += isChecked ? 1 : -1;
-            return newCounts;
+    const handleSelectionChange = (preguntaId, sectionIndex, isChecked) => {
+        setSelectedResponses((prevResponses) => {
+            const updatedResponses = {
+                ...prevResponses,
+                [preguntaId]: isChecked,
+            };
+
+            // Actualizar el contador dinámicamente
+            const updatedSelectedCounts = data.map((section, idx) => {
+                if (idx === sectionIndex) {
+                    return section.preguntas.filter((pregunta) => updatedResponses[pregunta.id]).length;
+                }
+                return section.preguntas.filter((pregunta) => selectedResponses[pregunta.id]).length;
+            });
+
+            setData((prevData) => {
+                const updatedData = [...prevData];
+                updatedData[sectionIndex].selectedCount = updatedSelectedCounts[sectionIndex];
+                return updatedData;
+            });
+
+            return updatedResponses;
         });
+    };
+
+    const handleSubmit = () => {
+        const respuestas = Object.keys(selectedResponses).map((idPregunta) => ({
+            idPregunta: parseInt(idPregunta, 10),
+            respuestaSeleccionada: selectedResponses[idPregunta],
+        }));
+
+        const requestData = {
+            idProyecto: projectExternalId,
+            respuestas,
+        };
+
+        peticionPost(getToken(), '/resultados/checklist', requestData)
+            .then((response) => {
+                if (response.code === 201) {
+                    console.log("Respuestas guardadas con éxito:", response.info);
+                    swal("¡Éxito!", "Las respuestas se guardaron correctamente.", "success");
+                } else {
+                    console.error("Error al guardar respuestas:", response.msg);
+                    swal("Error", response.msg || "Hubo un problema al guardar las respuestas.", "error");
+                }
+            })
+            .catch((error) => {
+                console.error("Error en la petición:", error);
+                swal("Error crítico", "No se pudo establecer conexión con el servidor.", "error");
+            });
     };
 
     return (
@@ -205,29 +170,45 @@ const CheckList = () => {
                 <div className="contenedor-carta">
                     <p className="titulo-primario">Evaluación del nivel de madurez de {project}</p>
                     <div className="checklist-grid">
-                        {sections.map((section, index) => (
+                        {data.map((section, index) => (
                             <div
                                 key={index}
                                 className="checklist-card"
                                 style={{ borderLeft: `10px solid ${section.color}` }}
                             >
-                                <h2 style={{ color: section.color }}>{section.title}</h2>
+                                <h2 style={{ color: section.color }}>{section.titulo}</h2>
                                 <ul>
-                                    {section.items.map((item, idx) => (
-                                        <li key={idx}>
-                                            <input type="checkbox" id={`${section.title}-${idx}`} onChange={(e) =>
-                                                handleSelectionChange(index, e.target.checked)
-                                            } />
-                                            <label htmlFor={`${section.title}-${idx}`}>{item}</label>
+                                    {section.preguntas.map((pregunta) => (
+                                        <li key={pregunta.id}>
+                                            <input
+                                                type="checkbox"
+                                                id={`pregunta-${pregunta.id}`}
+                                                checked={selectedResponses[pregunta.id] || false}
+                                                onChange={(e) =>
+                                                    handleSelectionChange(
+                                                        pregunta.id,
+                                                        index,
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            />
+                                            <label htmlFor={`pregunta-${pregunta.id}`}>
+                                                {pregunta.pregunta}
+                                            </label>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className="counter">
-                                    {selectedCounts[index]} / {section.items.length} seleccionados
+                                    {section.preguntas.filter((pregunta) => selectedResponses[pregunta.id]).length} / {section.preguntas.length} seleccionados
                                 </div>
                             </div>
 
                         ))}
+                    </div>
+                    <div className="contenedor-centro">
+                        <button className="boton-primario" onClick={handleSubmit}>
+                            Enviar Respuestas
+                        </button>
                     </div>
                 </div>
             </div>

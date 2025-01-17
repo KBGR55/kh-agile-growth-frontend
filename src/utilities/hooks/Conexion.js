@@ -66,6 +66,7 @@ export const peticionPost = async (key, URL,data) => {
     })).json();
     return datos;
 }
+
 export const peticionPut = async (key, URL,data) => {
     const headers = {
         "Content-Type": "application/json",
