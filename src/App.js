@@ -19,7 +19,7 @@ function App() {
     if (autenticado) {
       return children;
     } else {
-      return <Navigate to='/login' />;
+      return <Navigate to="/login" />;
     }
   };
 

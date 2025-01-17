@@ -9,9 +9,10 @@ import mensajes from '../utilities/Mensajes';
 import EditarPersona from './EditarPersona';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTimes, faCheck, faSearch, faPerson } from '@fortawesome/free-solid-svg-icons';
-import AsignarLideres from './AsignarLideres';
+import AsignarLideres from './AsignarAdminProyecto';
 import AsignarAdmin from './AsignarAdmin';
 import TablePagination from '@mui/material/TablePagination';
+import MenuBar from './MenuBar';
 
 const ListaUsuarios = () => {
     const [data, setData] = useState([]);
@@ -133,6 +134,7 @@ const ListaUsuarios = () => {
 
     return (
         <div>
+            <MenuBar/>
             <div className="contenedor-centro">
                 <div className='contenedor-carta '>
                     <div className='contenedor-filo'>
@@ -140,7 +142,7 @@ const ListaUsuarios = () => {
                         <Button
                             className="btn-normal mb-3"
                             onClick={handleShowAsignarModal}
-                        >  <FontAwesomeIcon icon={faPlus} /> Crear Lideres de Calidad
+                        >  <FontAwesomeIcon icon={faPlus} /> Crear Administrador Proyecto
                         </Button>
                         <Button
                             className="btn-opcional mb-3"
@@ -265,7 +267,7 @@ const ListaUsuarios = () => {
                 {/* Modal para asignar líderes */}
                 <Modal show={showAsignarModal} onHide={handleCloseAsignarModal} backdrop="static" keyboard={false}>
                     <Modal.Header closeButton>
-                        <Modal.Title className="titulo-primario">Asignar Líderes de Calidad</Modal.Title>
+                        <Modal.Title className="titulo-primario">Asignar Administrador Proyecto</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <AsignarLideres />
