@@ -819,3 +819,20 @@ input[type="checkbox"] {
 .criteria-icon {
     margin-top: 40px;
 }
+
+.counter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .checklist-card {
+    position: relative; /* Necesario para posicionar el contador */
+    padding-bottom: 40px; /* Asegura espacio para el contador */
+  }

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "../css/style.css";
 import MenuBar from "./MenuBar";
 
 const CheckList = () => {
     const project = "Proyecto X";
+
+    const [selectedCounts, setSelectedCounts] = useState(
+        Array(10).fill(0)
+    );
 
     const sections = [
         {
@@ -185,12 +189,20 @@ const CheckList = () => {
         },
     ];
 
+    // Manejar el cambio en las selecciones
+    const handleSelectionChange = (sectionIndex, isChecked) => {
+        setSelectedCounts((prevCounts) => {
+            const newCounts = [...prevCounts];
+            newCounts[sectionIndex] += isChecked ? 1 : -1;
+            return newCounts;
+        });
+    };
+
     return (
         <div>
             <MenuBar />
             <div className="contenedor-centro ">
                 <div className="contenedor-carta">
-                    {/* Contenedor del checklist con tarjetas */}
                     <p className="titulo-primario">Evaluación del nivel de madurez de {project}</p>
                     <div className="checklist-grid">
                         {sections.map((section, index) => (
@@ -203,11 +215,16 @@ const CheckList = () => {
                                 <ul>
                                     {section.items.map((item, idx) => (
                                         <li key={idx}>
-                                            <input type="checkbox" id={`${section.title}-${idx}`} />
+                                            <input type="checkbox" id={`${section.title}-${idx}`} onChange={(e) =>
+                                                handleSelectionChange(index, e.target.checked)
+                                            } />
                                             <label htmlFor={`${section.title}-${idx}`}>{item}</label>
                                         </li>
                                     ))}
                                 </ul>
+                                <div className="counter">
+                                    {selectedCounts[index]} / {section.items.length} seleccionados
+                                </div>
                             </div>
 
                         ))}
@@ -216,7 +233,6 @@ const CheckList = () => {
             </div>
 
             <div className="contenedor-centro">
-                {/* Contenedor extendido para los criterios de evaluación */}
                 <div className="contenedor-carta">
                     <p className="titulo-primario">Criterios de Evaluación</p>
                     <div className="criteria-grid">
