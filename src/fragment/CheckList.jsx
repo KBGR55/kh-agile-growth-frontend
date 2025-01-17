@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/CheckList.css";
+import "../css/style.css";
 import MenuBar from "./MenuBar";
 
 const CheckList = () => {
@@ -188,55 +188,61 @@ const CheckList = () => {
     return (
         <div>
             <MenuBar />
-            <div className="checklist-container">
-                {/* Contenedor del checklist con tarjetas */}
-                <h1>Evaluación del nivel de madurez de {project}</h1>
-                <div className="checklist-grid">
-                    {sections.map((section, index) => (
-                        <div
-                            key={index}
-                            className="checklist-card"
-                            style={{ borderLeft: `10px solid ${section.color}` }} // Borde izquierdo con color dinámico
-                        >
-                            <h2 style={{ color: section.color }}>{section.title}</h2>
-                            <ul>
-                                {section.items.map((item, idx) => (
-                                    <li key={idx}>
-                                        <input type="checkbox" id={`${section.title}-${idx}`} />
-                                        <label htmlFor={`${section.title}-${idx}`}>{item}</label>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                    ))}
-                </div>
-            </div>
-
-            {/* Contenedor extendido para los criterios de evaluación */}
-            <div className="criteria-container">
-                <h1>Criterios de Evaluación</h1>
-                <div className="criteria-grid">
-                    {criteria.map((criterion, idx) => (
-                        <div
-                            key={idx}
-                            className="criteria-card"
-                            style={{ borderColor: criterion.color }}
-                        >
+            <div className="contenedor-centro ">
+                <div className="contenedor-carta">
+                    {/* Contenedor del checklist con tarjetas */}
+                    <p className="titulo-primario">Evaluación del nivel de madurez de {project}</p>
+                    <div className="checklist-grid">
+                        {sections.map((section, index) => (
                             <div
-                                className="criteria-header"
-                                style={{ backgroundColor: criterion.color }}
+                                key={index}
+                                className="checklist-card"
+                                style={{ borderLeft: `10px solid ${section.color}` }}
                             >
-                                {criterion.level}
+                                <h2 style={{ color: section.color }}>{section.title}</h2>
+                                <ul>
+                                    {section.items.map((item, idx) => (
+                                        <li key={idx}>
+                                            <input type="checkbox" id={`${section.title}-${idx}`} />
+                                            <label htmlFor={`${section.title}-${idx}`}>{item}</label>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                            <div className="criteria-content">
-                                {criterion.icon && <div className="criteria-icon">{criterion.icon}</div>}
-                                <p>{criterion.description}</p>
-                            </div>
-                        </div>
-                    ))}
+
+                        ))}
+                    </div>
                 </div>
             </div>
+
+            <div className="contenedor-centro">
+                {/* Contenedor extendido para los criterios de evaluación */}
+                <div className="contenedor-carta">
+                    <p className="titulo-primario">Criterios de Evaluación</p>
+                    <div className="criteria-grid">
+                        {criteria.map((criterion, idx) => (
+                            <div
+                                key={idx}
+                                className="criteria-card"
+                                style={{ borderColor: criterion.color }}
+                            >
+                                <div
+                                    className="criteria-header"
+                                    style={{ backgroundColor: criterion.color }}
+                                >
+                                    {criterion.level}
+                                </div>
+                                <div className="criteria-content">
+                                    {criterion.icon && <div className="criteria-icon">{criterion.icon}</div>}
+                                    <p>{criterion.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
 
