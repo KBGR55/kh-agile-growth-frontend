@@ -11,6 +11,7 @@ import CambioClave from './fragment/CambioClave';
 import { getToken } from './utilities/Sessionutil';
 import ListaUsuarios from './fragment/ListaUsuarios';
 import Main from './fragment/Main';
+import Checklist from './fragment/CheckList';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -28,6 +29,7 @@ function App() {
         <Route path='*' element={<Navigate to='/login' />} />  
         <Route path='/' element={<Principal />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/checklist' element={<Checklist />} />
         <Route path='/registrarse' element={<Registrar />} />
         <Route path='/olvidar/clave' element={<OlvidoClave />} />
         <Route path='/cambio/clave/restablecer/:external_id/:token' element={<CambioClave />} />
