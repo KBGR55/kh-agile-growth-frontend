@@ -12,6 +12,7 @@ import { getToken } from './utilities/Sessionutil';
 import ListaUsuarios from './fragment/ListaUsuarios';
 import ListaProyectos from './fragment/ListaProyectos';
 import Checklist from './fragment/CheckList';
+import PresentacionProyecto from './fragment/PresentacionProyecto';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -29,6 +30,7 @@ function App() {
         <Route path='*' element={<Navigate to='/login' />} />  
         <Route path='/' element={<Principal />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/presentacion/:external_id' element={<PresentacionProyecto />} />
         <Route path='/checklist' element={<Checklist />} />
         <Route path='/registrarse' element={<Registrar />} />
         <Route path='/olvidar/clave' element={<OlvidoClave />} />

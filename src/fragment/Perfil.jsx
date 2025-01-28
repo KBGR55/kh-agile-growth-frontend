@@ -3,7 +3,9 @@ import { getUser } from '../utilities/Sessionutil';
 import React, { useEffect, useState } from 'react';
 import { URLBASE } from '../utilities/hooks/Conexion';
 import { useNavigate } from 'react-router-dom';
-
+import MenuBar from './MenuBar';
+import '../css/style.css';
+ 
 const Perfil = () => {
     const usuario = getUser();
     const navigate = useNavigate();
@@ -27,9 +29,10 @@ const Perfil = () => {
 
     return (
         <div>
+            <MenuBar/>
             <div className='container-fluid'>
                 <div className='contenedor-centro'>
-                    <div className="main-body " style={{ backgroundColor: '#F4EEFF' }}>
+                    <div className="contenedor-carta">
                         <div className="row gutters-sm">
                             <div className="col-md-4 mb-3">
                                 <div className="card">

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { peticionGet } from '../utilities/hooks/Conexion';
 import '../css/style.css';
-import { getToken, getUser, borrarSesion } from '../utilities/Sessionutil';
-import mensajes from '../utilities/Mensajes';
+import { getToken, getUser} from '../utilities/Sessionutil';
 import imagen from "../img/fondo.jpeg";
 import MenuBar from './MenuBar';
 
@@ -18,90 +17,44 @@ const PresentacionProyecto = () => {
     const [selectedOption, setSelectedOption] = useState('');
     const [showNewProjectModal, setShowNewProjectModal] = useState(false);
     const navigate = useNavigate();
-
+    
     useEffect(() => {
-        const fetchRoles = async () => {
+        const fetchData = async () => {
             try {
-                const info = await peticionGet(
-                    getToken(),
-                    `rol_proyecto/listar/entidad?id_entidad=${getUser().user.id}&external_id_proyecto=${external_id}`
-                );
-                if (info.code !== 200 && info.msg === 'Acceso denegado. Token ha expirado') {
-                    borrarSesion();
-                    mensajes(info.mensajes);
-                    navigate("/main");
-                } else if (info.code === 200) {
-                    setRoles(info.info.roles);
-                    setProyecto(info.info.proyecto);
-                } else {
-                    console.error('Error al obtener roles:', info.msg);
+                console.log('Iniciando fetchData...');
+                const [rolesRes, adminRes, rolesEntidadRes, proyectoRes] = await Promise.all([
+                    peticionGet(getToken(), `rol_proyecto/listar/entidad?id_entidad=${getUser().user.id}&external_id_proyecto=${external_id}`),
+                    peticionGet(getToken(), `rol/entidad/obtener/administrador?id_entidad=${getUser().user.id}`),
+                    peticionGet(getToken(), `rol/entidad/listar?id_entidad=${getUser().user.id}`),
+                    peticionGet(getToken(), `proyecto/${external_id}`)
+                ]);
+                if (rolesRes.code === 200) {
+                    setRoles(rolesRes.info.roles);
+                    setProyecto(rolesRes.info.proyecto);
+                }
+                if (adminRes.code === 200) {
+                    setRolAdministrador(adminRes.info);
+                }
+                if (rolesEntidadRes.code === 200) {
+                    setRolesEntidad(rolesEntidadRes.info);
+                }
+                if (proyectoRes.code === 200 && proyectoRes.info.length > 0) {
+                    setProyectoEntidad(proyectoRes.info[0]);
                 }
             } catch (error) {
-                console.error('Error en la solicitud:', error);
+                console.error('Error en fetchData:', error);
             }
         };
-        const fetchRolAdministrador = async () => {
-            try {
-                const info = await peticionGet(
-                    getToken(),
-                    `rol/entidad/obtener/administrador?id_entidad=${getUser().user.id}`
-                );
-                if (info.code !== 200 && info.msg === 'Acceso denegado. Token ha expirado') {
-                    borrarSesion();
-                    mensajes(info.mensajes);
-                    navigate("/main");
-                } else if (info.code === 200) {
-                    setRolAdministrador(info.code);
-                } else {
-                    setRolAdministrador(info.code);
-                    console.error('Error al obtener roles:', info.msg);
-                }
-            } catch (error) {
-                console.error('Error en la solicitud:', error);
-            }
-        };
-
-        const fetchRolesEntidad = async () => {
-            try {
-                const info = await peticionGet(
-                    getToken(),
-                    `rol/entidad/listar?id_entidad=${getUser().user.id}`
-                );
-                if (info.code !== 200 && info.msg === 'Acceso denegado. Token ha expirado') {
-                    borrarSesion();
-                    mensajes(info.mensajes);
-                    navigate("/main");
-                } else if (info.code === 200) {
-                    setRolesEntidad(info.info);
-                } else {
-                    console.error('Error al obtener roles:', info.msg);
-                }
-            } catch (error) {
-                console.error('Error en la solicitud:', error);
-            }
-        };
-
-        fetchRoles();
-        fetchRolAdministrador();
-        fetchRolesEntidad();
-    }, [external_id, navigate]);
-
-    useEffect(() => {
-        const fetchProject = async () => {
-            try {
-                const info = await peticionGet(getToken(), `proyecto/${external_id}`);
-                if (info.code === 200) {
-                    setProyectoEntidad(info.info);
-                } else {
-                    console.error('Error al obtener proyecto:', info.msg);
-                }
-            } catch (error) {
-                console.error('Error en la solicitud:', error);
-            }
-        };
-
-        fetchProject();
+    
+        fetchData();
     }, [external_id]);
+    
+    
+    
+    // Log para verificar roles y estados
+    console.log('Estado inicial - roles:', roles);
+    console.log('Estado inicial - proyectoEntidad:', proyectoEntidad);
+    
 
     const roleOptions = {
         'ADMIN_PROYECTO': ['Asignar equipo', 'Casos de prueba', 'Casos de prueba asignados', 'Generar reportes', 'Miembros'],
@@ -151,8 +104,8 @@ const PresentacionProyecto = () => {
                 <div className="header-section">
                     <img src={imagen} alt="Project Background" className="background-image" />
                     <div className="header-overlay">
-                        <h1 className="project-title">{proyectoEntidad[0].proyecto_rol.nombre}</h1>
-                        <p>{proyectoEntidad[0].proyecto_rol.descripcion || 'Descripción del proyecto.'}</p>
+                        <h1 className="project-title">{proyectoEntidad.proyecto_rol.nombre}</h1>
+                        <p>{proyectoEntidad.proyecto_rol.descripcion || 'Descripción del proyecto.'}</p>
                     </div>
                 </div>
 
