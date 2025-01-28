@@ -13,6 +13,7 @@ import ListaUsuarios from './fragment/ListaUsuarios';
 import ListaProyectos from './fragment/ListaProyectos';
 import Checklist from './fragment/CheckList';
 import PresentacionProyecto from './fragment/PresentacionProyecto';
+import UsuarioProyecto from './fragment/UsuarioProyecto';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -31,6 +32,7 @@ function App() {
         <Route path='/' element={<Principal />} />
         <Route path='/login' element={<Login />} />
         <Route path='/presentacion/:external_id' element={<PresentacionProyecto />} />
+        <Route path='/proyecto/usuarios/:external_id_proyecto' element={<MiddewareSesion><UsuarioProyecto /></MiddewareSesion>} />
         <Route path='/checklist' element={<Checklist />} />
         <Route path='/registrarse' element={<Registrar />} />
         <Route path='/olvidar/clave' element={<OlvidoClave />} />

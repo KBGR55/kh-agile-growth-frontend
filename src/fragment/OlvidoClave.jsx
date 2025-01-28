@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import mensajes from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import { peticionPut } from '../utilities/hooks/Conexion';
 
 const OlvidoClave = () => {
@@ -12,7 +12,7 @@ const OlvidoClave = () => {
 
     const onSubmit = async (data) => {
         const datos = {
-           correo: data.correo
+            correo: data.correo
         };
         const response = await peticionPut('', 'cuenta/validar', datos);
         if (response.code === 200) {
@@ -51,7 +51,7 @@ const OlvidoClave = () => {
                                 },
                             })}
                         />
-                        
+
                         {errors.correo && <div className="invalid-feedback">{errors.correo.message}</div>}
                     </div>
                     <div className="col-12 text-center">

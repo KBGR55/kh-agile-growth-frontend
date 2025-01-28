@@ -32,12 +32,18 @@
     color: var(--color-primario);
 }
 
-.titulo-primario {
+.titulo-primario,
+.titulo-proyecto {
     color: var(--color-cuarto);
     font-size: 30px;
     font-weight: bold;
     padding-left: 10px;
     position: relative;
+    text-align: left;
+}
+
+.titulo-proyecto {
+    text-align: center;
 }
 
 .titulo-primario::before {

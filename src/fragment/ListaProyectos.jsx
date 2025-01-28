@@ -3,12 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import swal from 'sweetalert'; 
+import swal from 'sweetalert';
 import { peticionGet } from '../utilities/hooks/Conexion';
 import '../css/style.css';
 import { useNavigate } from 'react-router-dom';
 import { borrarSesion, getToken, getUser } from '../utilities/Sessionutil';
-import mensajes from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import NuevoProyecto from './NuevoProyecto';
 import MenuBar from './MenuBar';
 import imagen from "../img/fondo.jpeg";
@@ -103,11 +103,11 @@ const ListaProyectos = () => {
             }
         });
     };
-    
+
 
     return (
         <div>
-            <MenuBar/>
+            <MenuBar />
             <div className="contenedor-centro">
                 <div className="contenedor-carta">
                     {rolLider.length > 0 && (
