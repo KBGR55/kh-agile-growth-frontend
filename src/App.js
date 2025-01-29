@@ -13,6 +13,7 @@ import ListaUsuarios from './fragment/ListaUsuarios';
 import ListaProyectos from './fragment/ListaProyectos';
 import Checklist from './fragment/CheckList';
 import PresentacionProyecto from './fragment/PresentacionProyecto';
+import Resultados from './fragment/Resultados';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -31,7 +32,7 @@ function App() {
         <Route path='/' element={<Principal />} />
         <Route path='/login' element={<Login />} />
         <Route path='/presentacion/:external_id' element={<PresentacionProyecto />} />
-        <Route path='/checklist' element={<Checklist />} />
+        <Route path='/checklist/:external_id' element={<Checklist />} />
         <Route path='/registrarse' element={<Registrar />} />
         <Route path='/olvidar/clave' element={<OlvidoClave />} />
         <Route path='/cambio/clave/restablecer/:external_id/:token' element={<CambioClave />} />
@@ -41,6 +42,7 @@ function App() {
         <Route path='/peticiones/clave' element={<MiddewareSesion><VerPeticionesClave /></MiddewareSesion>} />
         <Route path='/perfil' element={<MiddewareSesion><Perfil /></MiddewareSesion>} />
         <Route path='/cambio/clave' element={<MiddewareSesion><CambioClave /></MiddewareSesion>} />
+        <Route path="/resultados/:external_id" element={<Resultados />} />
       </Routes>
     </div>
   );

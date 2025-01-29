@@ -157,6 +157,7 @@ label {
 .btn-positivo,
 .btn-negativo,
 .btn-desactivado,
+.btn-opcional-verde,
 .btn-opcional {
     background-color: var(--color-cuarto);
     color: var(--color-primario);
@@ -165,6 +166,8 @@ label {
     border-radius: 5px;
     margin: 8px;
     padding: 8px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .btn-desactivado {
@@ -799,7 +802,7 @@ label {
     padding-left: 0;
 }
 
-.checklist-card ul li {
+.checklist-card ul p {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
