@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import mensajes from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCheck, faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
@@ -42,7 +42,7 @@ const EditarPersona = ({ personaObtenida, handleChange }) => {
     const toggleModal = () => {
         setShowModal(!showModal);
     };
-    
+
 
     const onSubmit = async (data) => {
         const formData = new FormData();

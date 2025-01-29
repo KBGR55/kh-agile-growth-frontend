@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { getToken, getUser } from '../utilities/Sessionutil';
 import { peticionGet } from '../utilities/hooks/Conexion';
-import mensajes from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import swal from 'sweetalert';
 
 const VerPeticion = () => {
@@ -65,9 +65,9 @@ const VerPeticion = () => {
         };
 
         const acepReac = (datac, motivo = "") => {
-            var motivoParam = encodeURIComponent(motivo); 
+            var motivoParam = encodeURIComponent(motivo);
             if (!motivoParam) {
-                motivoParam='true';
+                motivoParam = 'true';
             }
             peticionGet(getToken(), `aceptarechazar/peticiones/${external_id}/${datac}/${motivoParam}/${getUser().user.id}`).then((info) => {
                 if (info.code !== 200) {

@@ -5,6 +5,7 @@ import '../css/style.css';
 import { getToken, getUser} from '../utilities/Sessionutil';
 import imagen from "../img/fondo.jpeg";
 import MenuBar from './MenuBar';
+import { mensajesSinRecargar } from '../utilities/Mensajes';
 
 const PresentacionProyecto = () => {
     const { external_id } = useParams();
@@ -57,10 +58,8 @@ const PresentacionProyecto = () => {
     
 
     const roleOptions = {
-        'ADMIN_PROYECTO': ['Asignar equipo', 'Casos de prueba', 'Casos de prueba asignados', 'Generar reportes', 'Miembros'],
+        'ADMIN_PROYECTO': ['Asignar equipo','Editar proyecto','Miembros','Panel','Terminar proyecto'],
         'EQUIPO DE DESARROLLO': ['Casos de prueba', 'Lista de casos de prueba asignados'],
-        'TESTER': ['Casos de prueba', 'Registrar errores', 'Asignar desarrolladores'],
-        'DESARROLLADOR': ['Errores asigandos', 'Consultar errores asignados']
     };
 
     const roleIcons = {
@@ -75,7 +74,9 @@ const PresentacionProyecto = () => {
         setSelectedRoleId(roleId);
         setSelectedOption(option);
 
-        if (option === 'Casos de prueba') {
+        if (option === 'Panel') {
+            navigate(`/proyecto/panel/${proyecto.external_id}`, { state: { proyecto } });
+        }if (option === 'Casos de prueba') {
             navigate(`/casos/prueba/${proyecto.external_id}`, { state: { proyecto } });
         } else if (option === 'Editar proyecto') {
             setShowNewProjectModal(true);
@@ -89,7 +90,11 @@ const PresentacionProyecto = () => {
             navigate(`/asignar/desarrollador/${proyecto.external_id}`, { state: { selectedRoleId: roleId } });
         } else if (option === 'Errores asigandos') {
             navigate(`/errores/asignados/${proyecto.external_id}`);
-        };
+        } else if (option === 'Terminar proyecto') {
+            navigate(`/proyecto/terminar/${proyecto.external_id}`);
+        } else {
+            mensajesSinRecargar('Esta funcionalidad está en desarrollo de desarrollo.', 'info', 'Próximamente');
+        }
     }
     const handleCloseNewProjectModal = () => {
         setShowNewProjectModal(false);

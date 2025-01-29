@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { peticionPost, peticionGet, peticionPut } from '../utilities/hooks/Conexion';
-import mensajes from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import { getToken, getUser } from '../utilities/Sessionutil';
 import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
@@ -14,9 +14,9 @@ const NuevoProyecto = () => {
     const { external_id_proyecto } = useParams();
     const navigate = useNavigate();
     const [proyecto, setProyecto] = useState([]);
-    const {register, handleSubmit, setValue,formState: { errors }, watch } = useForm();
+    const { register, handleSubmit, setValue, formState: { errors }, watch } = useForm();
     const horasDiarias = watch('horasDiarias');
-  
+
     useEffect(() => {
         if (external_id_proyecto) {
             peticionGet(getToken(), `proyecto/obtener/${external_id_proyecto}`).then((info) => {
