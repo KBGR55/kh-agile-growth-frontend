@@ -14,6 +14,8 @@ import ListaProyectos from './fragment/ListaProyectos';
 import Checklist from './fragment/CheckList';
 import PresentacionProyecto from './fragment/PresentacionProyecto';
 import UsuarioProyecto from './fragment/UsuarioProyecto';
+import Panel from './fragment/Panel';
+import TerminarProyecto from './fragment/TerminarProyecto';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -32,7 +34,9 @@ function App() {
         <Route path='/' element={<Principal />} />
         <Route path='/login' element={<Login />} />
         <Route path='/presentacion/:external_id' element={<PresentacionProyecto />} />
+        <Route path='/proyecto/panel/:external_id_proyecto' element={<MiddewareSesion><Panel/></MiddewareSesion>} />
         <Route path='/proyecto/usuarios/:external_id_proyecto' element={<MiddewareSesion><UsuarioProyecto /></MiddewareSesion>} />
+        <Route path='/proyecto/terminar/:external_id_proyecto' element={<MiddewareSesion><TerminarProyecto/></MiddewareSesion>} />
         <Route path='/checklist' element={<Checklist />} />
         <Route path='/registrarse' element={<Registrar />} />
         <Route path='/olvidar/clave' element={<OlvidoClave />} />
