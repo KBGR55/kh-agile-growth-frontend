@@ -97,9 +97,9 @@ const Registrar = () => {
         <div className="container-fluid custom-container-register">
             <div className="register-container">
                 <div className="text-center mb-4" >
-                    <img src="/logo192.png" alt="RunQA" style={{ width: '150px' }} />
+                    <img src="/logo192.png" alt="KH AGILE GROWTH" style={{ width: '150px' }} />
                 </div>
-                <h2 className="text-center mb-4 titulo-primario">RunQA</h2>
+                <h2 className="text-center mb-4 titulo-primario">KH AGILE GROWTH</h2>
                 <form className="row g-3 p-2" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                     <div className="col-md-6">
                         <label htmlFor="nombres" className="form-label d-flex align-items-center">
