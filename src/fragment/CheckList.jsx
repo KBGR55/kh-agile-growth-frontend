@@ -8,6 +8,7 @@ import { getToken } from "../utilities/Sessionutil";
 import { peticionGet, peticionPost } from "../utilities/hooks/Conexion";
 import swal from "sweetalert";
 import { mensajes, mensajesSinRecargar } from "../utilities/Mensajes";
+import { exportToExcel } from "../utilities/ExportarExel";
 
 const CheckList = () => {
     const [data, setData] = useState([]);
@@ -209,6 +210,16 @@ const CheckList = () => {
         }
     };
 
+    const exportExcel = () => {
+        const rows = data.flatMap((section) =>
+            section.preguntas.map((pregunta) => ({
+                SECCION: section.titulo,
+                PREGUNTA: pregunta.pregunta,
+                CUMPLE: selectedResponses[pregunta.id] ? "Sí" : "No",
+            }))
+        );
+        exportToExcel(rows, proyecto.nombre);
+    };
 
     return (
         <div>
@@ -216,7 +227,7 @@ const CheckList = () => {
             <div className="contenedor-centro">
                 <div className="contenedor-carta">
                     <p className="titulo-primario">Evaluación del nivel de madurez de {proyecto.nombre}</p>
-    
+
                     {data.length === 0 ? (
                         <p>No se encontraron preguntas en el checklist.</p>
                     ) : (
@@ -303,6 +314,17 @@ const CheckList = () => {
                                 ))}
                             </div>
                             <div className="contenedor-filo">
+                                <button className="btn-normal" onClick={exportExcel}> <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    fill="currentColor"
+                                    className="bi bi-file-earmark-xls"
+                                    viewBox="0 0 16 16"
+                                    style={{ marginRight: "5px" }}
+                                >
+                                    <path d="M9.293 0H1.5a.5.5 0 0 0-.5.5v15a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V4.707a.5.5 0 0 0-.146-.354l-3.5-3.5a.5.5 0 0 0-.354-.146H9.293a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3.5V15H2V1h7.293a.5.5 0 0 0 .5-.5V0zM5.5 6H2v4h3.5a.5.5 0 0 0 .5-.5V6z" />
+                                </svg> Exportar a Excel</button>
                                 <button className="btn-normal" onClick={handleSubmit}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -324,7 +346,7 @@ const CheckList = () => {
             </div>
         </div>
     );
-    
+
 };
 
 export default CheckList;
