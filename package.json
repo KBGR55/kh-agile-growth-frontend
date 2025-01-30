@@ -21,7 +21,8 @@
     "react-scripts": "5.0.1",
     "recharts": "^2.15.1",
     "sweetalert": "^2.1.2",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "xlsx-js-style": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
