@@ -83,7 +83,7 @@ label {
 .contenedor-centro {
     display: flex;
     justify-content: center;
-    margin: 60px 50px 0;
+    margin: 60px 50px 50px;
 }
 .carta {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
@@ -907,3 +907,5 @@ input[type="checkbox"] {
   .razon-terminar {
     font-weight: bold;
   }
+
+  

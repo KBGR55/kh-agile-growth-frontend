@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getToken } from "../utilities/Sessionutil";
 import { peticionGet, peticionPost } from "../utilities/hooks/Conexion";
 import swal from "sweetalert";
-import { mensajes } from "../utilities/Mensajes";
+import { mensajes, mensajesSinRecargar } from "../utilities/Mensajes";
 
 const CheckList = () => {
     const [data, setData] = useState([]);
@@ -51,7 +51,7 @@ const CheckList = () => {
                 if (response.code === 200) {
                     setProyecto(response.info);
                 } else {
-                    mensajes(response.msg, "error", "Error");
+                    mensajesSinRecargar(response.msg, "error", "Error");
                 }
             })
             .catch((error) => console.error("Error en la petición:", error));
@@ -90,7 +90,6 @@ const CheckList = () => {
                         descriptionsMap[item.titulo] = item.descripcion;
                     });
                     setDescriptions(descriptionsMap);
-                    console.log("Descripciones cargadas:", response.info);
 
                 } else {
                     console.error("Error al cargar descripciones:", response.msg);
@@ -117,64 +116,99 @@ const CheckList = () => {
         });
     };
 
-    const handleSubmit = () => {
-        const resumen = data.map(
-            (section) => `${section.titulo}: ${counters[section.id] || 0}/${section.preguntas.length}`
-        ).join("\n");
-
-        swal({
+    const handleSubmit = async () => {
+        const resumen = data
+            .map(
+                (section) =>
+                    `${section.titulo}: ${counters[section.id] || 0}/${section.preguntas.length}`
+            )
+            .join("\n");
+    
+        const confirm = await swal({
             title: "¿Está seguro de enviar las respuestas?",
             text: `Resumen de las respuestas seleccionadas:\n${resumen}`,
             icon: "info",
             buttons: ["Cancelar", "Confirmar"],
-        }).then((confirm) => {
-            if (confirm) {
-                const respuestas = Object.keys(selectedResponses).map((idPregunta) => ({
-                    idPregunta: parseInt(idPregunta, 10),
-                    respuestaSeleccionada: selectedResponses[idPregunta],
-                }));
-
-                const requestData = {
-                    idProyecto: external_id,
-                    respuestas,
-                };
-
-                peticionPost(getToken(), "/resultados/checklist", requestData)
-                    .then((response) => {
-                        if (response.code === 201) {
-                            // Llamar a las rutas para calcular resultados después de enviar respuestas
-                            Promise.all([
-                                peticionGet(getToken(), `/resultado_categoria/calcular/${external_id}`),
-                                peticionGet(getToken(), `/nivel_madurez_general/calcular/${external_id}`)
-                            ])
-                                .then(([resCategoria, resMadurez]) => {
-                                    console.log("Respuesta de resultado_categoria:", resCategoria);
-                                    console.log("Respuesta de nivel_madurez_general:", resMadurez);
-
-                                    if (resCategoria.code === 200 && resMadurez.code === 200) {
-                                        swal("¡Éxito!", "Las respuestas se guardaron y los cálculos se han realizado.", "success")
-                                            .then(() => {
-                                                navigate(`/resultados/${external_id}`); // Redirigir a la vista de resultados
-                                            });
-                                    } else {
-                                        swal("Advertencia", "Respuestas guardadas, pero hubo un error en los cálculos.", "warning");
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.error("Error en las peticiones de cálculo:", error);
-                                    swal("Error crítico", "No se pudo calcular los resultados.", "error");
-                                });
-
-                        } else {
-                            swal("Error", response.msg || "Hubo un problema al guardar las respuestas.", "error");
-                        }
-                    })
-                    .catch((error) => {
-                        swal("Error crítico", "No se pudo establecer conexión con el servidor.", "error");
-                    });
-            }
         });
+    
+        if (!confirm) return;
+    
+        const respuestas = Object.keys(selectedResponses).map((idPregunta) => ({
+            idPregunta: parseInt(idPregunta, 10),
+            respuestaSeleccionada: selectedResponses[idPregunta],
+        }));
+    
+        const requestData = {
+            idProyecto: external_id,
+            respuestas,
+        };
+    
+        try {
+            const response = await peticionPost(getToken(), "/resultados/checklist", requestData);
+    
+            if (response.code === 201) {
+                console.log("Respuestas guardadas, realizando cálculos secuenciales...");
+    
+                try {
+                    const resCategoria = await peticionGet(
+                        getToken(),
+                        `/resultado_categoria/calcular/${external_id}`
+                    );
+                    console.log("Respuesta de resultado_categoria:", resCategoria);
+    
+                    if (resCategoria.code === 200) {
+                        const resMadurez = await peticionGet(
+                            getToken(),
+                            `/nivel_madurez_general/calcular/${external_id}`
+                        );
+                        console.log("Respuesta de nivel_madurez_general:", resMadurez);
+    
+                        if (resMadurez.code === 200) {
+                            await swal(
+                                "¡Éxito!",
+                                "Las respuestas se guardaron y los cálculos se han realizado.",
+                                "success"
+                            );
+                            navigate(`/proyecto/panel/${external_id}`);
+                        } else {
+                            await swal(
+                                "Advertencia",
+                                "Cálculo de nivel de madurez general fallido, aunque las respuestas y cálculos por categoría fueron exitosos.",
+                                "warning"
+                            );
+                        }
+                    } else {
+                        await swal(
+                            "Advertencia",
+                            "Respuestas guardadas, pero hubo un error al calcular resultados por categoría.",
+                            "warning"
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error en las peticiones de cálculo:", error);
+                    await swal(
+                        "Error crítico",
+                        "No se pudo calcular los resultados.",
+                        "error"
+                    );
+                }
+            } else {
+                await swal(
+                    "Error",
+                    response.msg || "Hubo un problema al guardar las respuestas.",
+                    "error"
+                );
+            }
+        } catch (error) {
+            console.error("Error crítico al guardar las respuestas:", error);
+            await swal(
+                "Error crítico",
+                "No se pudo establecer conexión con el servidor.",
+                "error"
+            );
+        }
     };
+    
 
     return (
         <div>
