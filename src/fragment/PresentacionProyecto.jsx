@@ -91,15 +91,13 @@ const PresentacionProyecto = () => {
 
 
     const roleOptions = {
-        'ADMIN_PROYECTO': ['Asignar equipo', 'Editar proyecto', 'Miembros', 'Panel', 'Terminar proyecto'],
-        'EQUIPO DE DESARROLLO': ['Casos de prueba', 'Lista de casos de prueba asignados'],
-    };
+        'ADMIN_PROYECTO': ['Checklist', 'Editar proyecto', 'Miembros', 'Panel', 'Terminar proyecto'],
+        'EQUIPO DE DESARROLLO': ['Panel'],
+    };    
 
     const roleIcons = {
         'ADMIN_PROYECTO': 'bi bi-briefcase-fill',
         'EQUIPO DE DESARROLLO': 'bi bi-card-checklist',
-        'TESTER': 'bi bi-bug-fill',
-        'DESARROLLADOR': 'bi bi-code-slash'
     };
     console.log(proyectoEntidad);
 
@@ -109,21 +107,13 @@ const PresentacionProyecto = () => {
         setSelectedOption(option);
 
         if (option === 'Panel') {
-            navigate(`/proyecto/panel/${proyecto.external_id}`, { state: { proyecto } });
-        } if (option === 'Casos de prueba') {
-            navigate(`/casos/prueba/${proyecto.external_id}`, { state: { proyecto } });
+            navigate(`/proyecto/panel/${proyecto.external_id}`);
+        } else if (option === 'Checklist') {
+            navigate(`/checklist/${proyecto.external_id}`, { state: { proyecto } });
         } else if (option === 'Editar proyecto') {
             handleEditClick(proyecto.external_id);
         } else if (option === 'Miembros') {
             navigate(`/proyecto/usuarios/${proyecto.external_id}`, { state: { proyecto } });
-        } else if (option === 'Asignar equipo') {
-            navigate(`/asignar/tester/${proyecto.external_id}`, { state: { selectedRoleId: roleId } });
-        } else if (option === 'Casos de prueba asignados') {
-            navigate(`/casos/prueba/asignados/${proyecto.external_id}`, { state: { proyecto } });
-        } else if (option === 'Asignar desarrolladores') {
-            navigate(`/asignar/desarrollador/${proyecto.external_id}`, { state: { selectedRoleId: roleId } });
-        } else if (option === 'Errores asigandos') {
-            navigate(`/errores/asignados/${proyecto.external_id}`);
         } else if (option === 'Terminar proyecto') {
             handleTerminarClick(proyecto.external_id);
         } else {
