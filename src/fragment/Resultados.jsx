@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { peticionGet} from "../utilities/hooks/Conexion";
-import { borrarSesion, getToken } from "../utilities/Sessionutil";
+import {getToken } from "../utilities/Sessionutil";
 
 const Resultados = () => {
     const { external_id } = useParams();

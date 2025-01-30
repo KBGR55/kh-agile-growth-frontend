@@ -7,10 +7,10 @@ const Principal = () => {
     const [slideOut, setSlideOut] = useState(false);
 
     const handleStartClick = () => {
-        setSlideOut(true); 
+        setSlideOut(true);
         setTimeout(() => {
-            navigate('/login'); 
-        }, 500); 
+            navigate('/login');
+        }, 500);
     };
     return (
         <div className={`home-container ${slideOut ? 'slide-out' : ''}`}>
@@ -19,7 +19,7 @@ const Principal = () => {
             </div>
 
             <div className="text-overlay">
-                <h1>RUNQA</h1>
+                <h1>KH AGILE GROWTH</h1>
                 <h2>Sistema de Gestión de Pruebas de Software</h2>
                 <p>Proyecto realizado por estudiantes de la asignatura Software Quality perteneciente al itinerario de Ingeniería de Software en la carrera de Computación de la Universidad Nacional de Loja.</p>
                 <button onClick={handleStartClick} className="start-button">Empezar</button>

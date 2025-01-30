@@ -52,7 +52,7 @@ const Login = () => {
                     <div className="login-left position-relative">
                         <div className="login-overlay d-flex flex-column justify-content-between">
                             <div className="d-flex align-items-center">
-                                <img src="/logo192.png" alt="Logo RunQA" className="rounded-circle" style={{ width: '250px' }} />
+                                <img src="/logo192.png" alt="Logo KH AGILE GROWTH" className="rounded-circle" style={{ width: '250px' }} />
                             </div>
                         </div>
                     </div>

@@ -3,19 +3,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { peticionDelete, peticionGet, peticionPut } from '../utilities/hooks/Conexion';
+import { peticionDelete, peticionGet } from '../utilities/hooks/Conexion';
 import  {mensajes} from '../utilities/Mensajes';
 import { getToken } from '../utilities/Sessionutil';
 import swal from 'sweetalert';
 import { useForm } from 'react-hook-form';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const TerminarProyecto = ({ }) => {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
-    const { external_id_proyecto } = useParams();
+const TerminarProyecto = ({ external_id_proyecto }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [infoProyecto, setProyecto] = useState([]);
     const navigate = useNavigate();
-
 
     useEffect(() => {
         const fetchCasoPrueba = async () => {

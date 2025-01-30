@@ -4,10 +4,11 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../css/style.css";
 import MenuBar from "./MenuBar";
 import { useNavigate, useParams } from "react-router-dom";
-import { borrarSesion, getToken } from "../utilities/Sessionutil";
+import { getToken } from "../utilities/Sessionutil";
 import { peticionGet, peticionPost } from "../utilities/hooks/Conexion";
 import swal from "sweetalert";
 import { mensajes, mensajesSinRecargar } from "../utilities/Mensajes";
+import { mensajes } from "../utilities/Mensajes";
 
 const CheckList = () => {
     const [data, setData] = useState([]);
@@ -125,6 +126,12 @@ const CheckList = () => {
             .join("\n");
     
         const confirm = await swal({
+    const handleSubmit = () => {
+        const resumen = data.map(
+            (section) => `${section.titulo}: ${counters[section.id] || 0}/${section.preguntas.length}`
+        ).join("\n");
+
+        swal({
             title: "¿Está seguro de enviar las respuestas?",
             text: `Resumen de las respuestas seleccionadas:\n${resumen}`,
             icon: "info",
@@ -164,6 +171,44 @@ const CheckList = () => {
                                 "success"
                             );
                             navigate(`/proyecto/panel/${external_id}`);
+        }).then((confirm) => {
+            if (confirm) {
+                const respuestas = Object.keys(selectedResponses).map((idPregunta) => ({
+                    idPregunta: parseInt(idPregunta, 10),
+                    respuestaSeleccionada: selectedResponses[idPregunta],
+                }));
+
+                const requestData = {
+                    idProyecto: external_id,
+                    respuestas,
+                };
+
+                peticionPost(getToken(), "/resultados/checklist", requestData)
+                    .then((response) => {
+                        if (response.code === 201) {
+                            // Llamar a las rutas para calcular resultados después de enviar respuestas
+                            Promise.all([
+                                peticionGet(getToken(), `/resultado_categoria/calcular/${external_id}`),
+                                peticionGet(getToken(), `/nivel_madurez_general/calcular/${external_id}`)
+                            ])
+                                .then(([resCategoria, resMadurez]) => {
+                                    console.log("Respuesta de resultado_categoria:", resCategoria);
+                                    console.log("Respuesta de nivel_madurez_general:", resMadurez);
+
+                                    if (resCategoria.code === 200 && resMadurez.code === 200) {
+                                        swal("¡Éxito!", "Las respuestas se guardaron y los cálculos se han realizado.", "success")
+                                            .then(() => {
+                                                navigate(`/resultados/${external_id}`); // Redirigir a la vista de resultados
+                                            });
+                                    } else {
+                                        swal("Advertencia", "Respuestas guardadas, pero hubo un error en los cálculos.", "warning");
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.error("Error en las peticiones de cálculo:", error);
+                                    swal("Error crítico", "No se pudo calcular los resultados.", "error");
+                                });
+
                         } else {
                             await swal(
                                 "Advertencia",
@@ -192,6 +237,16 @@ const CheckList = () => {
     };
     
   
+                            swal("Error", response.msg || "Hubo un problema al guardar las respuestas.", "error");
+                        }
+                    })
+                    .catch((error) => {
+                        swal("Error crítico", "No se pudo establecer conexión con el servidor.", "error");
+                    });
+            }
+        });
+    };
+
     return (
         <div>
             <MenuBar />
@@ -230,7 +285,7 @@ const CheckList = () => {
                                         </span>
 
                                         {section.titulo} ({counters[section.id] || 0}/{section.preguntas.length}){" "}
-                                        
+
                                     </button>
                                 </h2>
                                 <div

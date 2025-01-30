@@ -3,14 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import swal from 'sweetalert';
 import { peticionGet } from '../utilities/hooks/Conexion';
 import '../css/style.css';
 import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
 import { borrarSesion, getToken, getUser } from '../utilities/Sessionutil';
-import  {mensajes} from '../utilities/Mensajes';
+import { mensajes } from '../utilities/Mensajes';
 import NuevoProyecto from './NuevoProyecto';
 import MenuBar from './MenuBar';
+import TerminarProyecto from './TerminarProyecto';
 import fondo from '../img/fondo.jpeg';
 
 const ListaProyectos = () => {
@@ -19,6 +20,7 @@ const ListaProyectos = () => {
     const [rolLider, setRolLider] = useState([]);
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const [selectedProjectId, setSelectedProjectId] = useState(null);
+    const [showTerminarProjectModal, setShowTerminarProjectModal] = useState(false);
     const [roles, setRoles] = useState([]);
     const navigate = useNavigate();
     const user = getUser().user;
@@ -69,7 +71,6 @@ const ListaProyectos = () => {
     const handleCloseNewProjectModal = () => setShowNewProjectModal(false);
 
     const handleProjectClick = (proyecto) => navigate(`/presentacion/${proyecto.external_id}`);
-
     const handleEliminarProyecto = async (externalId) => {
         swal({
             title: "¿Está seguro?",
@@ -116,10 +117,28 @@ const ListaProyectos = () => {
         setSelectedProjectId(externalId);
         setShowEditProjectModal(true);
     };
-    
+
+    const handleTerminarClick = (externalId) => {
+        swal({
+            title: "¿Está seguro?",
+            text: "Una vez terminado, no podrá modificar ni agregar nada a este proyecto.",
+            icon: "warning",
+            buttons: ["Cancelar", "Confirmar"],
+            dangerMode: true,
+        }).then((confirmacion) => {
+            if (confirmacion) {
+                setSelectedProjectId(externalId);
+                setShowTerminarProjectModal(true);
+            }
+        });
+    };
+
+    const handleTerminarModal = () => {
+        setShowTerminarProjectModal(true);
+    };
     return (
         <div>
-            <MenuBar/>
+            <MenuBar />
             <div className="contenedor-centro">
                 <div className="contenedor-carta">
                     {rolLider.length > 0 && (
@@ -143,7 +162,7 @@ const ListaProyectos = () => {
                                         style={{ cursor: 'pointer', borderColor: '#e0e0e0' }}
                                         onClick={() => !proyecto.terminado && handleProjectClick(proyecto)}
                                     >
-                                      {proyecto.terminado && (
+                                        {proyecto.terminado && (
                                             <div className="overlay-terminar">
                                                 <p className="razon-terminar text-center">
                                                     {proyecto.razon_terminado || 'Sin razón especificada'}
@@ -182,6 +201,14 @@ const ListaProyectos = () => {
                                                         <Dropdown.Item
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
+                                                                handleTerminarClick(proyecto.external_id);
+                                                            }}
+                                                        >
+                                                            Terminar Proyecto
+                                                        </Dropdown.Item>
+                                                        <Dropdown.Item
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
                                                                 handleEliminarProyecto(proyecto.external_id);
                                                             }}
                                                         >
@@ -210,7 +237,15 @@ const ListaProyectos = () => {
                     <NuevoProyecto external_id_proyecto={selectedProjectId} onClose={handleCloseNewProjectModal} />
                 </Modal.Body>
             </Modal>
-
+            {/* Modal para terminar proyecto */}
+            <Modal show={showTerminarProjectModal} onHide={handleTerminarModal} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title className="titulo-primario">Terminar Proyecto</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <TerminarProyecto external_id_proyecto={selectedProjectId} onClose={handleTerminarModal} />
+                </Modal.Body>
+            </Modal>
             {/* Modal para crearproyecto */}
             <Modal show={showNewProjectModal} onHide={handleCloseNewProjectModal}>
                 <Modal.Header closeButton>
