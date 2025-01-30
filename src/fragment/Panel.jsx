@@ -1,208 +1,173 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Grid, Menu } from '@mui/material';
-import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { useParams } from 'react-router-dom';
 import '../css/style.css';
 import { peticionGet } from '../utilities/hooks/Conexion';
 import { getToken } from '../utilities/Sessionutil';
 import MenuBar from './MenuBar';
 
-// Colores para el gráfico circular
-const COLORS = [
-    'var(--color-cuarto)',
-    'var(--color-terciario)',
-    'var(--color-primario)',
-    'var(--color-secundario)',
-    'var(--azul-oscuro)',
-    'var(--azul-intermedio)',
-    'var(--naranja-claro)',
-    'var(--rojo-claro)'
-];
+const LEVEL_COLORS = {
+    Exploratorio: '#5A799E',
+    Emergente: '#6C8BAF',
+    Estandarizado: '#7E9DC1',
+    'Optimizado Avanzado': '#91AED3',
+    'Excelencia Innovadora': '#A3C0E5',
+};
+
+const COLORS = ['#2E5077', '#074799', '#35A29F', '#46B3E6', '#003638', '#1687A7', '#11BFAE', '#3282B8', '#47597E', '#055052'];
 
 function Panel() {
     const { external_id_proyecto } = useParams();
-    const [proyecto, setProyecto] = useState([]);
-    const [casosPrueba, setCasosPrueba] = useState([]);
-    const [casosPruebaClasificacion, setCasosPruebaClasificacion] = useState([]);
-    const [errors, setErrors] = useState([]);
-    const [prioridadErrors, setPrioridadErrors] = useState([]);
-    const [severidadErrors, setSeveridadErrors] = useState([]);
+    const [nivelGeneral, setNivelGeneral] = useState(null);
+    const [categorias, setCategorias] = useState([]);
+    const [categoriasInfo, setCategoriasInfo] = useState([]);
 
     useEffect(() => {
-        const fetchProyecto = async () => {
-            try {
-                const info = await peticionGet(getToken(), `proyecto/contar/casos/${external_id_proyecto}`);
-                if (info.code === 200) {
-                    setProyecto(info.info.proyecto);
-                    setCasosPrueba(info.info.casos_de_prueba);
-                    setCasosPruebaClasificacion(info.info.casos_de_prueba_clasificacion);
-                    setErrors(info.info.errores);
-                    setPrioridadErrors(info.info.prioridad);
-                    setSeveridadErrors(info.info.severidad);
-                } else {
-                    console.error('Error al obtener proyecto:', info.msg);
-                }
-            } catch (error) {
-                console.error('Error en la solicitud:', error);
-            }
+        const fetchNivelMadurezGeneral = async () => {
+            const info = await peticionGet(getToken(), `nivel_madurez_general/obtener/${external_id_proyecto}`);
+            if (info.code === 200) setNivelGeneral(info.info);
         };
 
-        fetchProyecto();
+        const fetchCategorias = async () => {
+            const info = await peticionGet(getToken(), `resultado_categoria/obtener/${external_id_proyecto}`);
+            if (info.code === 200) setCategorias(info.info);
+        };
+
+        const fetchNivelesMadurez = async () => {
+            const info = await peticionGet(getToken(), 'checklist/listar');
+            if (info.code === 200) setCategoriasInfo(info.info);
+        };
+
+        fetchNivelMadurezGeneral();
+        fetchCategorias();
+        fetchNivelesMadurez();
     }, [external_id_proyecto]);
 
-    const errorData = errors.map(error => ({
-        name: error.estado,
-        value: error.cantidad,
+    const categoriaData = categorias.map(categoria => ({
+        name: categoria.categoria,
+        porcentaje: parseFloat(categoria.porcentaje),
     }));
 
-    const severidadData = severidadErrors.map(severidad => ({
-        name: severidad.severidad,
-        value: severidad.cantidad,
-    }));
-
-    const prioridadData = prioridadErrors.map(prioridad => ({
-        name: prioridad.prioridad,
-        value: prioridad.cantidad,
-    }));
+    const nivelColor = nivelGeneral ? LEVEL_COLORS[nivelGeneral.nivel_madurez] || '#2196F3' : '#2196F3';
 
     return (
         <div>
             <MenuBar />
             <div style={{ padding: '20px' }}>
-                <p className="titulo-proyecto">{proyecto.nombre}</p>
-                {/* Casos de prueba */}
-                <div className="contenedor-carta">
-                    <p className="titulo-primario" style={{ textAlign: 'center' }}>{'Casos de Prueba'}</p>
-                    {casosPrueba.length === 0 ? (
-                        <p>No se encontraron casos de prueba para el proyecto seleccionado.</p>
-                    ) : (
-                        <div className="row">
-                            {casosPrueba.map((estado) => (
-                                <div className="col-12 col-sm-6 col-md-3" key={estado.estado}>
-                                    <Card>
-                                        <CardContent>
-                                            <Typography variant="h6">{estado.estado}</Typography>
-                                            <Typography variant="h4">{estado.cantidad}</Typography>
-                                        </CardContent>
-                                    </Card>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    <div className="contenedor-carta">
-                        <p className="titulo-primario">{'Clasificación'}</p>
-                        {casosPruebaClasificacion.length === 0 ? (
-                            <p>No se encontraron clasificaciones para los casos de prueba.</p>
-                        ) : (
-                            <section className='table_body'>
-                                <div className="table-responsive">
-                                    <table className="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th className="text-center">Clasificación</th>
-                                                <th className="text-center">Cantidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {casosPruebaClasificacion.map((clasificacion, index) => (
-                                                <tr key={index}>
-                                                    <td className="text-center">{clasificacion.clasificacion}</td>
-                                                    <td className="text-center">{clasificacion.cantidad}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </section>
-                        )}
-                    </div>
-                </div>
 
-                <div className="contenedor-carta">
-                    <div className="row">
-                        {/* Columna izquierda: Severidad y Prioridad */}
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <p className="titulo-primario" style={{ textAlign: 'center' }}>{'Errores por Severidad'}</p>
-                            {severidadErrors.length === 0 ? (
-                                <p>No se han reportado severidades para este proyecto.</p>
-                            ) : (
-                                <TableContainer component={Paper}>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell><strong>Severidad</strong></TableCell>
-                                                <TableCell><strong>Cantidad</strong></TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {severidadData.map((row, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell>{row.name}</TableCell>
-                                                    <TableCell>{row.value}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            )}
-                        </div>
+                {/* Nivel General */}
+                {nivelGeneral && (
+                    <Card style={{ marginBottom: '20px', padding: '20px', color: nivelColor, borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+                        <CardContent>
+                            <Typography variant="h5" style={{ textAlign: 'center', fontWeight: '600' }}>Nivel de Madurez General</Typography>
+                            <Typography variant="h6" style={{ textAlign: 'center', margin: '10px 0', fontSize: '60px', fontWeight: 'bold' }}>
+                                {nivelGeneral.nivel_madurez}
+                            </Typography>
+                            <Typography variant="body1" style={{ textAlign: 'center', fontSize: '25px' }}>
+                                Porcentaje: {nivelGeneral.nivel_general}%
+                            </Typography>
+                            <Typography variant="body2" style={{ textAlign: 'center', marginTop: '10px' }}>
+                                {nivelGeneral.descripcion}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                )}
 
-                        <div className="col-12 col-sm-6 col-md-4">
-                            <p className="titulo-primario" style={{ textAlign: 'center' }}>{'Errores por Prioridad'}</p>
-                            {prioridadErrors.length === 0 ? (
-                                <p>No se han reportado prioridades para este proyecto.</p>
-                            ) : (
-                                <TableContainer component={Paper}>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell><strong>Prioridad</strong></TableCell>
-                                                <TableCell><strong>Cantidad</strong></TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {prioridadData.map((row, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell>{row.name}</TableCell>
-                                                    <TableCell>{row.value}</TableCell>
-                                                </TableRow>
+                {/* Análisis por Categoría */}
+                <Grid container spacing={3} style={{ marginBottom: '20px' }}>
+                    <Grid item xs={12} md={6}>
+                        <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                            <CardContent>
+                                <Typography variant="h6" style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', color: 'var(--color-cuarto)' }}>
+                                    Porcentaje por Categoría
+                                </Typography>
+                                <ResponsiveContainer width="100%" height={350}>
+                                    <BarChart data={categoriaData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Bar dataKey="porcentaje">
+                                            {categoriaData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            )}
-                        </div>
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
-                        {/* Columna derecha: Gráfico de Errores */}
-                        <div className="col-12 col-md-4">
-                            <p className="titulo-primario" style={{ textAlign: 'center' }}>{'Errores reportados'}</p>
-                            {errors.length === 0 ? (
-                                <p>No se han reportado errores en el proyecto.</p>
-                            ) : (
-                                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                    <PieChart width={250} height={250}>
+                    <Grid item xs={12} md={6}>
+                        <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                            <CardContent>
+                                <Typography variant="h6" style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', color: 'var(--color-cuarto)' }}>
+                                    Distribución de Niveles
+                                </Typography>
+                                <ResponsiveContainer width="100%" height={350}>
+                                    <PieChart>
                                         <Pie
-                                            data={errorData}
+                                            data={categoriaData}
+                                            dataKey="porcentaje"
+                                            nameKey="name"
                                             cx="50%"
                                             cy="50%"
                                             outerRadius={100}
                                             fill="#8884d8"
-                                            dataKey="value"
                                             label
                                         >
-                                            {errorData.map((entry, index) => (
+                                            {categoriaData.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                         <Tooltip />
                                         <Legend />
                                     </PieChart>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+
+                {/* Desglose de Niveles */}
+                <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
+                    <Typography style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '20px', fontWeight: 'bold', color: 'var(--color-cuarto)' }}>
+                        Lista de Categorías
+                    </Typography>
+                    {categoriasInfo.map((categoria, index) => (
+                        <Accordion
+                            key={categoria.external_id}
+                            style={{
+                                marginBottom: '10px',
+                                borderRadius: '10px',
+                                border: '1px solid #ddd',
+                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                            }}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                style={{
+                                    backgroundColor: COLORS[index % COLORS.length],
+                                    color: '#fff',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {categoria.titulo} (Peso: {categoria.peso})
+                            </AccordionSummary>
+                            <AccordionDetails style={{ backgroundColor: '#fff', color: '#000' }}>
+                                <Typography variant="body1" style={{ marginBottom: '10px' }}>
+                                    <strong>Descripción:</strong> {categoria.descripcion}
+                                </Typography>
+                                <Typography variant="body2">
+                                    <strong>Justificación del Peso:</strong> {categoria.justificacion_peso}
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))}
+                </Card>
+
             </div>
         </div>
     );
