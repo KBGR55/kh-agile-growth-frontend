@@ -56,7 +56,7 @@ const CheckList = () => {
                     return;
                 }
     
-                const responseSeleccionadas = await peticionGet(getToken(), `/preguntas-seleccionadas/${external_id}`);
+                const responseSeleccionadas = await peticionGet(getToken(), `preguntas-seleccionadas/${external_id}`);
                 const respuestasPrevias = {};
                 const countersPrevios = {};
     

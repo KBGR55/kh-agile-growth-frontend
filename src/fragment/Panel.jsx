@@ -4,9 +4,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import { useParams } from 'react-router-dom';
 import '../css/style.css';
+import html2canvas from 'html2canvas';
 import { peticionGet } from '../utilities/hooks/Conexion';
 import { getToken } from '../utilities/Sessionutil';
 import MenuBar from './MenuBar';
+import { Button } from 'react-bootstrap';
 
 const LEVEL_COLORS = {
     'Exploratorio': '#F5004F',
@@ -51,7 +53,17 @@ function Panel() {
     }));
 
     const nivelColor = nivelGeneral ? LEVEL_COLORS[nivelGeneral.nivel_madurez] || '#2196F3' : '#2196F3';
-
+    const downloadImage = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            html2canvas(element).then((canvas) => {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL();
+                link.download = 'card_image.png';
+                link.click();
+            });
+        }
+    };
     return (
         <div>
             <MenuBar />
@@ -75,13 +87,24 @@ function Panel() {
                                 </CardContent>
                             </Card>
                         )}
-    
+
                         {/* Análisis por Categoría */}
                         <Grid container spacing={3} style={{ marginBottom: '20px' }}>
                             <Grid item xs={12} md={6}>
-                                <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                                    <CardContent>
-                                        <Typography variant="h6" style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', color: 'var(--color-cuarto)', fontFamily: 'Popins, sans-serif' }}>
+                                <Card
+                                    style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                                >
+                                    <CardContent id="card1">
+                                        <Typography
+                                            variant="h6"
+                                            style={{
+                                                marginBottom: '10px',
+                                                textAlign: 'center',
+                                                fontWeight: 'bold',
+                                                color: 'var(--color-cuarto)',
+                                                fontFamily: 'Popins, sans-serif',
+                                            }}
+                                        >
                                             Porcentaje por Categoría
                                         </Typography>
                                         <ResponsiveContainer width="100%" height={350}>
@@ -97,14 +120,32 @@ function Panel() {
                                                 </Bar>
                                             </BarChart>
                                         </ResponsiveContainer>
+
                                     </CardContent>
+                                    <div className='contenedor-filo p-2'>
+                                        <Button className='btn-normal' onClick={() => downloadImage('card1')}> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                                            <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
+                                        </svg>  Download Image</Button>
+                                    </div>
                                 </Card>
                             </Grid>
-    
+
                             <Grid item xs={12} md={6}>
-                                <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                                    <CardContent>
-                                        <Typography variant="h6" style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', color: 'var(--color-cuarto)', fontFamily: 'Popins, sans-serif' }}>
+                                <Card
+                                    style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                                >
+                                    <CardContent id="card2" >
+                                        <Typography
+                                            variant="h6"
+                                            style={{
+                                                marginBottom: '10px',
+                                                textAlign: 'center',
+                                                fontWeight: 'bold',
+                                                color: 'var(--color-cuarto)',
+                                                fontFamily: 'Popins, sans-serif',
+                                            }}
+                                        >
                                             Distribución de Niveles
                                         </Typography>
                                         <ResponsiveContainer width="100%" height={350}>
@@ -128,10 +169,15 @@ function Panel() {
                                             </PieChart>
                                         </ResponsiveContainer>
                                     </CardContent>
-                                </Card>
+                                    <div className='contenedor-filo p-2'>
+                                        <Button className='btn-normal' onClick={() => downloadImage('card2')}> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                                            <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
+                                        </svg>  Download Image</Button>
+                                    </div> </Card>
                             </Grid>
                         </Grid>
-    
+
                         {/* Desglose de Niveles */}
                         <Card style={{ borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
                             <Typography style={{ marginBottom: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '20px', fontWeight: 'bold', color: 'var(--color-cuarto)', fontFamily: 'Popins, sans-serif' }}>
@@ -177,7 +223,7 @@ function Panel() {
             </div>
         </div>
     );
-    
+
 }
 
 export default Panel;
