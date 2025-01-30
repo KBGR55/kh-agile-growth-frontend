@@ -46,58 +46,77 @@ const CheckList = () => {
     };
 
     useEffect(() => {
-
-        peticionGet(getToken(), `proyecto/obtener/${external_id}`)
-            .then((response) => {
-                if (response.code === 200) {
-                    setProyecto(response.info);
+        const cargarDatos = async () => {
+            try {
+                const responseProyecto = await peticionGet(getToken(), `proyecto/obtener/${external_id}`);
+                if (responseProyecto.code === 200) {
+                    setProyecto(responseProyecto.info);
                 } else {
-                    mensajesSinRecargar(response.msg, "error", "Error");
+                    mensajesSinRecargar(responseProyecto.msg, "error", "Error");
+                    return;
                 }
-            })
-            .catch((error) => console.error("Error en la petición:", error));
-
-        peticionGet(getToken(), "/preguntas/checklist")
-            .then((response) => {
-                if (response.code === 200) {
-                    const mappedData = response.info.map((section) => ({
+    
+                const responseSeleccionadas = await peticionGet(getToken(), `/preguntas-seleccionadas/${external_id}`);
+                const respuestasPrevias = {};
+                const countersPrevios = {};
+    
+                if (responseSeleccionadas.code === 200) {
+                    responseSeleccionadas.info.forEach((item) => {
+                        respuestasPrevias[item.id_pregunta_checklist] = true;
+                        const checklistId = item.pregunta_checklist.id_checklist;
+                        countersPrevios[checklistId] = (countersPrevios[checklistId] || 0) + 1;
+                        console.log("Contadores previos:", responseSeleccionadas);
+                        
+                    });
+                }
+    
+                const responseChecklist = await peticionGet(getToken(), "/preguntas/checklist");
+                if (responseChecklist.code === 200) {
+                    const mappedData = responseChecklist.info.map((section) => ({
                         ...section,
                         color: colors[section.titulo] || "#f7f9f9",
                         titleColor: titleColors[section.titulo] || "#000",
                     }));
-                    setData(mappedData);
-
-                    const initialResponses = {};
-                    const initialCounters = {};
+    
+                    const initialResponses = { ...respuestasPrevias };
+                    const initialCounters = { ...countersPrevios };
+    
                     mappedData.forEach((section) => {
-                        initialCounters[section.id] = 0;
+                        if (!initialCounters[section.id]) {
+                            initialCounters[section.id] = 0;
+                        }
                         section.preguntas.forEach((pregunta) => {
-                            initialResponses[pregunta.id] = false;
+                            if (initialResponses[pregunta.id] === undefined) {
+                                initialResponses[pregunta.id] = false;
+                            }
                         });
                     });
+    
+                    setData(mappedData);
                     setSelectedResponses(initialResponses);
                     setCounters(initialCounters);
                 } else {
-                    console.error("Error al cargar datos:", response.msg);
+                    console.error("Error al cargar datos del checklist:", responseChecklist.msg);
                 }
-            })
-            .catch((error) => console.error("Error en la petición:", error));
-
-        peticionGet(getToken(), "/checklist/listar")
-            .then((response) => {
-                if (response.code === 200) {
+    
+                const responseDescripciones = await peticionGet(getToken(), "/checklist/listar");
+                if (responseDescripciones.code === 200) {
                     const descriptionsMap = {};
-                    response.info.forEach((item) => {
+                    responseDescripciones.info.forEach((item) => {
                         descriptionsMap[item.titulo] = item.descripcion;
                     });
                     setDescriptions(descriptionsMap);
-
                 } else {
-                    console.error("Error al cargar descripciones:", response.msg);
+                    console.error("Error al cargar descripciones:", responseDescripciones.msg);
                 }
-            })
-            .catch((error) => console.error("Error al obtener descripciones:", error));
-    }, []);
+            } catch (error) {
+                console.error("Error en la carga de datos:", error);
+            }
+        };
+    
+        cargarDatos();
+    }, [external_id]);
+    
 
     const handleSelectionChange = (preguntaId, sectionId, isChecked) => {
         setSelectedResponses((prevResponses) => {
@@ -108,8 +127,11 @@ const CheckList = () => {
 
             setCounters((prevCounters) => {
                 const updatedCount = Object.keys(updatedResponses)
-                    .filter((id) => data.find((section) => section.id === sectionId)?.preguntas.some((p) => p.id.toString() === id) && updatedResponses[id])
-                    .length;
+                    .filter((id) =>
+                        data
+                            .find((section) => section.id === sectionId)
+                            ?.preguntas.some((p) => p.id.toString() === id) && updatedResponses[id]
+                    ).length;
                 return { ...prevCounters, [sectionId]: updatedCount };
             });
 
