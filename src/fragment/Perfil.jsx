@@ -11,6 +11,7 @@ const Perfil = () => {
     const navigate = useNavigate();
     const [nombreUsuario, setNombreUsuario] = useState('');
     const [entidadInfo, setEntidadInfo] = useState(null);
+    const [correoInfo, setCorreoInfo] = useState(null);
     const { external_id_proyecto, external_id_entidad } = useParams();
 
     useEffect(() => {
@@ -19,8 +20,9 @@ const Perfil = () => {
                 .then((info) => {
                     if (info.code === 200) {
                         console.log(info.info);
-                        setEntidadInfo(info.info);
-                        setNombreUsuario(info.info.nombres);
+                        setEntidadInfo(info.info); 
+                        setNombreUsuario(info.info.nombres + " " + info.info.apellidos);
+                        setCorreoInfo(info.info.correo);
                     } else {
                         mensajes(info.msg, 'error', 'Error');
                     }
@@ -31,10 +33,12 @@ const Perfil = () => {
                 });
         } else {
             const usuario = getUser();
-            setEntidadInfo(usuario.user); // Set to user info if no entidad is provided
-            setNombreUsuario(usuario.user.nombres);
+            setEntidadInfo(usuario.user);  
+            setNombreUsuario(usuario.user.nombres + " " + usuario.user.apellidos);
+            setCorreoInfo(usuario.correo);
         }
-    }, [entidadInfo]);
+    }, [external_id_entidad]);  
+    
 
     const obtenerFechaFormateada = (fechaString) => {
         const fecha = new Date(fechaString);
@@ -70,7 +74,7 @@ const Perfil = () => {
                                                 }}
                                             />
                                             <div className="mt-3">
-                                                <h4 style={{ fontWeight: 'bold' }}>{entidadInfo?.nombres}</h4>
+                                                <h4 style={{ fontWeight: 'bold' }}>{nombreUsuario}</h4>
                                             </div>
                                         </div>
 
@@ -81,31 +85,33 @@ const Perfil = () => {
                                         <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                                             <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Proyecto de Software Security</h6>
                                         </li>
-                                        <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                            <button
-                                                className="btn btn-link p-0"
-                                                onClick={() => navigate('/cambio/clave')}
-                                                style={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold', border: 'none', background: 'none' }}
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="feather feather-key mr-2 icon-inline"
+                                        {entidadInfo?.external_id === getUser()?.external_id && (  // Condición para mostrar el botón solo si los IDs coinciden
+                                            <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                                <button
+                                                    className="btn btn-link p-0"
+                                                    onClick={() => navigate('/cambio/clave')}
+                                                    style={{ textDecoration: 'none', color: 'inherit', fontWeight: 'bold', border: 'none', background: 'none' }}
                                                 >
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                    <line x1="2" y1="12" x2="22" y2="12"></line>
-                                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                                                </svg>
-                                                Cambiar Clave
-                                            </button>
-                                        </li>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="feather feather-key mr-2 icon-inline"
+                                                    >
+                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                                    </svg>
+                                                    Cambiar Clave
+                                                </button>
+                                            </li>
+                                        )}
                                     </ul>
                                 </div>
                             </div>
@@ -116,7 +122,7 @@ const Perfil = () => {
                                     <div className="row pt-1">
                                         <div className="col-6 mb-3">
                                             <h6>Correo electrónico</h6>
-                                            <p className="text-muted">{entidadInfo?.correo}</p>
+                                            <p className="text-muted">{correoInfo}</p>
                                         </div>
                                         <div className="col-6 mb-3">
                                             <h6>Fecha de nacimiento</h6>
