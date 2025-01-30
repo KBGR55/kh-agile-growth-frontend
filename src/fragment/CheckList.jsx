@@ -47,7 +47,6 @@ const CheckList = () => {
     useEffect(() => {
         const cargarDatos = async () => {
             try {
-                // Obtener datos del proyecto
                 const responseProyecto = await peticionGet(getToken(), `proyecto/obtener/${external_id}`);
                 if (responseProyecto.code === 200) {
                     setProyecto(responseProyecto.info);
@@ -56,7 +55,6 @@ const CheckList = () => {
                     return;
                 }
     
-                // Obtener preguntas seleccionadas previamente
                 const responseSeleccionadas = await peticionGet(getToken(), `/preguntas-seleccionadas/${external_id}`);
                 const respuestasPrevias = {};
                 const countersPrevios = {};
@@ -71,7 +69,6 @@ const CheckList = () => {
                     });
                 }
     
-                // Obtener todas las preguntas del checklist
                 const responseChecklist = await peticionGet(getToken(), "/preguntas/checklist");
                 if (responseChecklist.code === 200) {
                     const mappedData = responseChecklist.info.map((section) => ({
@@ -80,7 +77,6 @@ const CheckList = () => {
                         titleColor: titleColors[section.titulo] || "#000",
                     }));
     
-                    // Configurar estados iniciales combinados
                     const initialResponses = { ...respuestasPrevias };
                     const initialCounters = { ...countersPrevios };
     
@@ -102,7 +98,6 @@ const CheckList = () => {
                     console.error("Error al cargar datos del checklist:", responseChecklist.msg);
                 }
     
-                // Obtener descripciones del checklist
                 const responseDescripciones = await peticionGet(getToken(), "/checklist/listar");
                 if (responseDescripciones.code === 200) {
                     const descriptionsMap = {};
