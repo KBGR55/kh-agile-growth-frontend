@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-import { Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router';
-import { peticionGet } from '../utilities/hooks/Conexion';
+import { peticionGet, URLBASE } from '../utilities/hooks/Conexion';
 import { getToken, getUser } from '../utilities/Sessionutil';
 import { mensajesSinRecargar } from '../utilities/Mensajes';
 import imagen from "../img/fondo.jpeg";
@@ -14,7 +14,7 @@ import '../css/style.css';
 const PresentacionProyecto = () => {
     const { external_id } = useParams();
     const [proyecto, setProyecto] = useState(null);
-    const [proyectoEntidad, setProyectoEntidad] = useState(null);
+    const [proyectoEntidad, setProyectoEntidad] = useState([]);
     const [roles, setRoles] = useState([]);
     const [rolAdministrador, setRolAdministrador] = useState('');
     const [rolesEntida, setRolesEntidad] = useState([]);
@@ -78,9 +78,8 @@ const PresentacionProyecto = () => {
                 if (rolesEntidadRes.code === 200) {
                     setRolesEntidad(rolesEntidadRes.info);
                 }
-                console.log('proyectoRes:', proyectoRes);
-                if (proyectoRes.code === 200 && proyectoRes.info.length > 0) {
-                    setProyectoEntidad(proyectoRes.info[0]);
+                if (proyectoRes.code === 200) {
+                    setProyectoEntidad(proyectoRes.info);
                 }
             } catch (error) {
                 console.error('Error en fetchData:', error);
@@ -89,6 +88,7 @@ const PresentacionProyecto = () => {
 
         fetchData();
     }, [external_id]);
+
 
     const roleOptions = {
         'ADMIN_PROYECTO': ['Asignar equipo', 'Editar proyecto', 'Miembros', 'Panel', 'Terminar proyecto'],
@@ -101,6 +101,7 @@ const PresentacionProyecto = () => {
         'TESTER': 'bi bi-bug-fill',
         'DESARROLLADOR': 'bi bi-code-slash'
     };
+    console.log(proyectoEntidad);
 
     const handleOptionClick = (option, roleId, event) => {
         event.preventDefault();
@@ -139,19 +140,17 @@ const PresentacionProyecto = () => {
                 <div className="header-section">
                     <img src={imagen} alt="Project Background" className="background-image" />
                     <div className="header-overlay">
-                        <h1 className="project-title">{proyectoEntidad.proyecto_rol.nombre}</h1>
-                        <p>{proyectoEntidad.proyecto_rol.descripcion || 'Descripción del proyecto.'}</p>
+                        <h1 className="project-title">{proyecto.nombre}</h1>
+                        <p>{proyecto.descripcion || 'Descripción del proyecto.'}</p>
                     </div>
                 </div>
 
-                {/* Sección de contenido */}
                 <div className="contenedor-carta">
-                    <div className="fila-opciones">
-                        <div className="g-1">
+                    <div className="fila-opciones p-4">
+                        <div className="row carta">
                             <p className="titulo-primario">Opciones permitidas</p>
-
                             {roles.length > 0 && roles.map((role, index) => (
-                                <div key={index} className="col-md-4">
+                                <div key={index} className="col-md-6">
                                     <h3 className="titulo-secundario">
                                         <i className={roleIcons[role.nombre] || 'bi bi-person'}></i> {role.nombre}
                                     </h3>
@@ -172,17 +171,38 @@ const PresentacionProyecto = () => {
                             ))}
                         </div>
 
-                        <div className="project-team">
+                        <div className="row carta">
                             <p className="titulo-primario">Equipo del proyecto</p>
                             <ul>
                                 {proyectoEntidad && proyectoEntidad.length > 0 ? (
-                                    proyectoEntidad.map((miembro, index) => (
-                                        <li key={index}>
-                                            {miembro.rol_entidad.entidad.nombres}{' '}
-                                            {miembro.rol_entidad.entidad.apellidos} -{' '}
-                                            <strong>{miembro.rol_entidad.rol.nombre}</strong>
-                                        </li>
-                                    ))
+                                    <section className='table_body'>
+                                        <div className="table-responsive">
+                                            <table className="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th className="text-center">Avatar</th>
+                                                        <th className="text-center">Nombres</th>
+                                                        <th className="text-center">Rol</th>
+                                                        <th className="text-center">Horas diarias</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {proyectoEntidad.map((user) => (
+                                                        <tr key={user.id}
+                                                        style={{ cursor: "pointer" }} 
+                                                        onClick={() => navigate(`/perfil/${proyecto.external_id}/${user.rol_entidad.entidad.external_id}`)}>
+                                                            <td className="text-center" style={{ backgroundColor: "#FFFFFF", border: "none" }}>
+                                                                <img src={URLBASE + "images/users/" + user.rol_entidad.entidad.foto} alt="Avatar" style={{ width: '30px', height: '30px' }} />
+                                                            </td>
+                                                            <td className="text-center">{user.rol_entidad.entidad.nombres+" "+user.rol_entidad.entidad.apellidos}</td>
+                                                            <td className="text-center">{user.rol_entidad.rol.nombre}</td>
+                                                            <td className="text-center">{user.horasDiarias}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </section>
                                 ) : (
                                     <li>No hay miembros del equipo registrados</li>
                                 )}

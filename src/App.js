@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from './fragment/Login';
 import Registrar from './fragment/Registrar';
-import Perfil from './fragment/Perfil';
 import VerPeticion from './fragment/VerPeticion';
 import VerPeticionesClave from './fragment/VerPeticionesClave';
 import Principal from './fragment/Principal';
@@ -17,6 +16,7 @@ import UsuarioProyecto from './fragment/UsuarioProyecto';
 import Panel from './fragment/Panel';
 import TerminarProyecto from './fragment/TerminarProyecto';
 import Resultados from './fragment/Resultados';
+import Perfil from './fragment/Perfil';
 
 function App() {
   const MiddewareSesion = ({ children }) => {
@@ -48,6 +48,7 @@ function App() {
         <Route path='/peticiones/registro' element={<MiddewareSesion><VerPeticion /></MiddewareSesion>} />
         <Route path='/peticiones/clave' element={<MiddewareSesion><VerPeticionesClave /></MiddewareSesion>} />
         <Route path='/perfil' element={<MiddewareSesion><Perfil /></MiddewareSesion>} />
+        <Route path='/perfil/:external_id_proyecto/:external_id_entidad' element={<MiddewareSesion><Perfil/></MiddewareSesion>} />
         <Route path='/cambio/clave' element={<MiddewareSesion><CambioClave /></MiddewareSesion>} />
         <Route path="/resultados/:external_id" element={<Resultados />} />
       </Routes>
