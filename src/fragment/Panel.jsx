@@ -9,7 +9,6 @@ import { peticionGet } from '../utilities/hooks/Conexion';
 import { getToken } from '../utilities/Sessionutil';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuBar from './MenuBar';
-import { Button } from 'react-bootstrap';
 
 const LEVEL_COLORS = {
     'Exploratorio': '#F5004F',

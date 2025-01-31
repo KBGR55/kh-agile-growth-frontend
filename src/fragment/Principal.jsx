@@ -20,8 +20,8 @@ const Principal = () => {
 
             <div className="text-overlay">
                 <h1>KH AGILE GROWTH</h1>
-                <h2>Sistema de Gestión de Pruebas de Software</h2>
-                <p>Proyecto realizado por estudiantes de la asignatura Software Quality perteneciente al itinerario de Ingeniería de Software en la carrera de Computación de la Universidad Nacional de Loja.</p>
+                <h2>Sistema de Evaluación y Mejora del Modelo de Madurez de Software</h2>
+                <p>Proyecto realizado por estudiantes de la asignatura Software Security perteneciente al itinerario de Ingeniería de Software en la carrera de Computación de la Universidad Nacional de Loja.</p>
                 <button onClick={handleStartClick} className="start-button">Empezar</button>
             </div>
         </div>
